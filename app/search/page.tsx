@@ -9,11 +9,15 @@ import { Slider } from "@/components/ui/slider"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, MapPin, Phone, Star, Users, X } from "lucide-react"
 import Image from "next/image"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import dynamic from 'next/dynamic';
-import Map from "@/components/map"
+// import Map from "@/components/map"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
+
+const Map = dynamic(() => import('@/components/map'), {
+  ssr: false, // <- disables server-side rendering
+});
 const coworkingSpaces = [
   {
     id: 1,
@@ -128,15 +132,18 @@ interface ChatRefType{
   deSelectSpace : () => void
 }
 
-const height = innerHeight
 export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [priceRange, setPriceRange] = useState([20, 50])
   const mapRef = useRef<ChatRefType|null>(null);
   const [selectedSpace, setSelectedSpace] = useState<number | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [height,setHeight] = useState(0)
+  // const height = typeof window === undefined?window.innerHeight:0
 
-  
+  useEffect(()=>{
+    setHeight(window.innerHeight)
+  },[])
   
   const selectedSpaceData = selectedSpace ? coworkingSpaces.find((space) => space.id === selectedSpace) : null
 
@@ -148,8 +155,8 @@ export default function SearchPage() {
     }
   }
   return (
-    <div className="overflow-y-hidden bg-gray-50">
-      <div className="flex flex-col lg:flex-row overflow-y-scroll lg:overflow-y-hidden" style={{height:height-64}}>
+    <div className="overflow-y-hidden bg-gray-50 hide-scrollbar">
+      <div className="flex flex-col lg:flex-row overflow-y-scroll lg:overflow-y-hidden hide-scrollbar" style={{height:height-64}}>
         
         <div className="w-full lg:w-1/2 flex flex-col">
           
