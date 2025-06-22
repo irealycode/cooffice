@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "CoOffice - Premium Coworking Spaces",
   description: "Find and book premium coworking spaces in your city. From hot desks to private offices.",
+  icons: {
+    icon: "/assets/images/desk.svg",
+  },
 }
 
 export default function RootLayout({
