@@ -194,7 +194,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     cell: ({ row }) => (
       <Badge
         variant="outline"
-        className="flex gap-1 px-1.5 text-muted-foreground [&_svg]:size-3"
+        className="flex gap-1 px-1.5 text-muted-foreground whitespace-nowrap [&_svg]:size-3"
       >
         {row.original.status === "Booked" ? (
           <CheckCircle2Icon className="text-green-500 dark:text-green-400" />
@@ -407,7 +407,7 @@ export function DataTable({
   return (
     <Tabs
       defaultValue="outline"
-      className="flex w-full flex-col justify-start gap-6"
+      className="flex flex-col justify-start gap-6"
     >
       <div className="flex items-center justify-between px-4 lg:px-6">
         <Label htmlFor="view-selector" className="sr-only">
