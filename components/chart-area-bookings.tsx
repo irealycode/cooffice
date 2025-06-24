@@ -142,9 +142,13 @@ interface  filtersType{
   value:string
 }
 
-export function ChartAreaInteractive({title,underTitle,filters}:{title:string,underTitle:string,filters:filtersType[]}) {
+export function ChartAreaBookings({title,underTitle,filters}:{title:string,underTitle:string,filters:filtersType[]}) {
   const isMobile = useIsMobile()
   const [timeRange, setTimeRange] = React.useState("30d")
+  const [city, setCity] = React.useState("All")
+  const [space, setSpace] = React.useState("All")
+  const cities = ["All","Tangier","Casablanca","Rabat","Agadir"]
+  const spaces = ["All","Casablanca Tech","Rabat Coworking","Ramedia book","Cowork Agadir"]
 
   React.useEffect(() => {
     if (isMobile) {
@@ -177,26 +181,10 @@ export function ChartAreaInteractive({title,underTitle,filters}:{title:string,un
           </span> */}
           <span className="@[540px]/card:hidden">{underTitle}</span>
         </CardDescription>
-        <div className="absolute right-4 top-4">
-          <ToggleGroup
-            type="single"
-            value={timeRange}
-            onValueChange={setTimeRange}
-            variant="outline"
-            className="@[767px]/card:flex hidden"
-          >
-            {filters.map((f,i)=>{
-              return(
-                <ToggleGroupItem key={f.title} value={f.value} className="h-8 px-2.5">
-                  {f.title}
-                </ToggleGroupItem>
-              )
-            })}
-            
-          </ToggleGroup>
+        <div className="flex gap-2 absolute right-4 top-4">
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
-              className="@[767px]/card:hidden flex w-40"
+              className="@[767px]/card:hidden flex w-24"
               aria-label="Select a value"
             >
               <SelectValue placeholder={filters[0].title} />
@@ -206,6 +194,43 @@ export function ChartAreaInteractive({title,underTitle,filters}:{title:string,un
                 return(
                   <SelectItem key={f.title} value={f.value} className="rounded-lg">
                     {f.title}
+                  </SelectItem>
+                )
+              })}
+              
+            </SelectContent>
+          </Select>
+          {/* cities filter */}
+          <Select value={city} onValueChange={setCity}>
+            <SelectTrigger
+              className="@[767px]/card:hidden flex w-24"
+              aria-label="Select a value"
+            >
+              <SelectValue placeholder={cities[0]} />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              {cities.map((c,i)=>{
+                return(
+                  <SelectItem key={c} value={c} className="rounded-lg">
+                    {c}
+                  </SelectItem>
+                )
+              })}
+              
+            </SelectContent>
+          </Select>
+          <Select value={space} onValueChange={setSpace}>
+            <SelectTrigger
+              className="@[767px]/card:hidden flex w-24"
+              aria-label="Select a value"
+            >
+              <SelectValue placeholder={cities[0]} />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              {spaces.map((c,i)=>{
+                return(
+                  <SelectItem key={c} value={c} className="rounded-lg">
+                    {c}
                   </SelectItem>
                 )
               })}

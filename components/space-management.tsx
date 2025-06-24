@@ -476,8 +476,11 @@ export default function SpacesPage({initialSpaces}:{initialSpaces : SpaceType[]}
         </Card>
         <Card>
           <CardHeader className="pb-5">
-            <div className="text-2xl font-bold">DH {spaces.reduce((sum, s) => sum + s.price, 0)}</div>
-            <p className="text-sm text-muted-foreground">Total Daily Revenue</p>
+            <div className="flex items-center text-2xl font-bold">
+                <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
+                {initialSpaces.reduce((sum, item) => sum + item.rating, 0)/initialSpaces.length}
+            </div>
+            <p className="text-sm text-muted-foreground">Average rating</p>
           </CardHeader>
         </Card>
         <Card>

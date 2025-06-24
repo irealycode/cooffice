@@ -11,7 +11,7 @@ import {
 
 export function SectionCards() {
   return (
-    <div className="p-6 flex flex-row flex-wrap gap-6 items-center justify-center lg:justify-start">
+    <div className="pl-6 flex flex-row flex-wrap gap-6 items-center justify-center lg:justify-start">
       <Card className="@container/card">
         <CardHeader className="relative">
           <CardDescription>Total Revenue</CardDescription>
@@ -30,7 +30,7 @@ export function SectionCards() {
             Trending up this month <TrendingUpIcon className="size-4" />
           </div>
           <div className="text-muted-foreground">
-            Visitors for the last 6 months
+            Revenue for this month
           </div>
         </CardFooter>
       </Card>
@@ -52,7 +52,7 @@ export function SectionCards() {
             Down 20% this period <TrendingDownIcon className="size-4" />
           </div>
           <div className="text-muted-foreground">
-            Acquisition needs attention
+            Customer acquisition this month
           </div>
         </CardFooter>
       </Card>
@@ -73,7 +73,7 @@ export function SectionCards() {
           <div className="line-clamp-1 flex gap-2 font-medium">
             Strong user retention <TrendingUpIcon className="size-4" />
           </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
+          <div className="text-muted-foreground">Engagement for this month</div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
@@ -93,7 +93,7 @@ export function SectionCards() {
           <div className="line-clamp-1 flex gap-2 font-medium">
             Steady performance <TrendingUpIcon className="size-4" />
           </div>
-          <div className="text-muted-foreground">Meets growth projections</div>
+          <div className="text-muted-foreground">Growth for this month</div>
         </CardFooter>
       </Card>
     </div>

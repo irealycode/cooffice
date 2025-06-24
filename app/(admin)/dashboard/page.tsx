@@ -10,8 +10,10 @@ import React from "react"
 
 
 import data from "./data.json"
+import fiteredData from "./data1.json"
 import SpacesPage from "@/components/space-management"
 import UsersPage from "@/components/team"
+import Analytics from "@/components/analytics"
 
 
 const transitionData = {
@@ -267,16 +269,15 @@ export default function DashboardPage() {
       <SidebarInset style={{width:'calc(100% - 100px)',overflow:'hidden'}}>
         <SiteHeader title={transitionData.navMain[navSelected].title} />
         {navSelected === 0 && <div className="flex flex-1 flex-col"  >
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+          <div className="@container/main flex flex-1 flex-col">
+            <div className="flex flex-col py-2 gap-2 md:py-2">
               <SectionCards />
-              <div className="px-4 lg:px-6">
-                <ChartAreaInteractive />
-              </div>
-              <DataTable data={data} />
+              <p className="pl-6 mt-1 font-semibold text-2xl" >Lastest Bookings</p>
+              <DataTable data={fiteredData} simple maxSize={3} />
             </div>
           </div>
         </div>}
+        {navSelected === 1 && <Analytics />}
         {navSelected === 2 && <SpacesPage initialSpaces={coworkingSpaces} />}
         {navSelected === 3 && <UsersPage initialUsers={initialUsers} />}
 

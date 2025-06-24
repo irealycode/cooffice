@@ -1,0 +1,263 @@
+[
+    {
+        "id": 1,
+        "location": "Cover page",
+        "type": "Cover page",
+        "status": "In Process",
+        "target": "18",
+        "limit": "5",
+        "reviewer": "Eddie Lake"
+    },
+    {
+        "id": 5,
+        "location": "Design",
+        "type": "Narrative",
+        "status": "In Process",
+        "target": "2",
+        "limit": "16",
+        "reviewer": "Jamik Tashpulatov"
+    },
+    {
+        "id": 6,
+        "location": "Capabilities",
+        "type": "Narrative",
+        "status": "In Process",
+        "target": "20",
+        "limit": "8",
+        "reviewer": "Jamik Tashpulatov"
+    },
+    {
+        "id": 7,
+        "location": "Integration with existing systems",
+        "type": "Narrative",
+        "status": "In Process",
+        "target": "19",
+        "limit": "21",
+        "reviewer": "Jamik Tashpulatov"
+    },
+    {
+        "id": 16,
+        "location": "Security Measures and Data Protection Policies",
+        "type": "Narrative",
+        "status": "In Process",
+        "target": "6",
+        "limit": "36",
+        "reviewer": "Assign reviewer"
+    },
+    {
+        "id": 21,
+        "location": "System Architecture Overview",
+        "type": "Technical content",
+        "status": "In Process",
+        "target": "24",
+        "limit": "18",
+        "reviewer": "Maya Johnson"
+    },
+    {
+        "id": 23,
+        "location": "Compliance Documentation",
+        "type": "Legal",
+        "status": "In Process",
+        "target": "31",
+        "limit": "27",
+        "reviewer": "Sarah Chen"
+    },
+    {
+        "id": 25,
+        "location": "User Interface Mockups",
+        "type": "Visual",
+        "status": "In Process",
+        "target": "19",
+        "limit": "25",
+        "reviewer": "Leila Ahmadi"
+    },
+    {
+        "id": 27,
+        "location": "Testing Methodology",
+        "type": "Technical content",
+        "status": "In Process",
+        "target": "17",
+        "limit": "14",
+        "reviewer": "Assign reviewer"
+    },
+    {
+        "id": 29,
+        "location": "Budget Breakdown",
+        "type": "Financial",
+        "status": "In Process",
+        "target": "13",
+        "limit": "16",
+        "reviewer": "Jamik Tashpulatov"
+    },
+    {
+        "id": 31,
+        "location": "Competitor Comparison",
+        "type": "Research",
+        "status": "In Process",
+        "target": "21",
+        "limit": "19",
+        "reviewer": "Assign reviewer"
+    },
+    {
+        "id": 33,
+        "location": "User Personas",
+        "type": "Research",
+        "status": "In Process",
+        "target": "27",
+        "limit": "24",
+        "reviewer": "Nina Patel"
+    },
+    {
+        "id": 35,
+        "location": "Performance Metrics",
+        "type": "Technical content",
+        "status": "In Process",
+        "target": "23",
+        "limit": "26",
+        "reviewer": "David Kim"
+    },
+    {
+        "id": 37,
+        "location": "Third-party Integrations",
+        "type": "Technical content",
+        "status": "In Process",
+        "target": "25",
+        "limit": "28",
+        "reviewer": "Eddie Lake"
+    },
+    {
+        "id": 39,
+        "location": "Localization Strategy",
+        "type": "Narrative",
+        "status": "In Process",
+        "target": "12",
+        "limit": "19",
+        "reviewer": "Maria Garcia"
+    },
+    {
+        "id": 41,
+        "location": "Data Migration Plan",
+        "type": "Technical content",
+        "status": "In Process",
+        "target": "19",
+        "limit": "22",
+        "reviewer": "Assign reviewer"
+    },
+    {
+        "id": 43,
+        "location": "Stakeholder Analysis",
+        "type": "Research",
+        "status": "In Process",
+        "target": "11",
+        "limit": "14",
+        "reviewer": "Eddie Lake"
+    },
+    {
+        "id": 45,
+        "location": "Intellectual Property Rights",
+        "type": "Legal",
+        "status": "In Process",
+        "target": "17",
+        "limit": "20",
+        "reviewer": "Sarah Johnson"
+    },
+    {
+        "id": 47,
+        "location": "Version Control Strategy",
+        "type": "Technical content",
+        "status": "In Process",
+        "target": "15",
+        "limit": "18",
+        "reviewer": "Assign reviewer"
+    },
+    {
+        "id": 49,
+        "location": "Regulatory Compliance",
+        "type": "Legal",
+        "status": "In Process",
+        "target": "13",
+        "limit": "16",
+        "reviewer": "Assign reviewer"
+    },
+    {
+        "id": 51,
+        "location": "Data Analytics Framework",
+        "type": "Technical content",
+        "status": "In Process",
+        "target": "21",
+        "limit": "24",
+        "reviewer": "Jamik Tashpulatov"
+    },
+    {
+        "id": 53,
+        "location": "Network Security Measures",
+        "type": "Technical content",
+        "status": "In Process",
+        "target": "29",
+        "limit": "32",
+        "reviewer": "Lisa Wong"
+    },
+    {
+        "id": 55,
+        "location": "Resource Allocation",
+        "type": "Planning",
+        "status": "In Process",
+        "target": "27",
+        "limit": "30",
+        "reviewer": "Assign reviewer"
+    },
+    {
+        "id": 57,
+        "location": "Communication Protocols",
+        "type": "Planning",
+        "status": "In Process",
+        "target": "15",
+        "limit": "18",
+        "reviewer": "Assign reviewer"
+    },
+    {
+        "id": 59,
+        "location": "Internationalization Support",
+        "type": "Technical content",
+        "status": "In Process",
+        "target": "23",
+        "limit": "26",
+        "reviewer": "Jamik Tashpulatov"
+    },
+    {
+        "id": 61,
+        "location": "Monitoring and Alerting System",
+        "type": "Technical content",
+        "status": "In Process",
+        "target": "25",
+        "limit": "28",
+        "reviewer": "Daniel Park"
+    },
+    {
+        "id": 63,
+        "location": "Documentation Standards",
+        "type": "Technical content",
+        "status": "In Process",
+        "target": "27",
+        "limit": "30",
+        "reviewer": "Jamik Tashpulatov"
+    },
+    {
+        "id": 65,
+        "location": "Feature Prioritization Matrix",
+        "type": "Planning",
+        "status": "In Process",
+        "target": "19",
+        "limit": "22",
+        "reviewer": "Emma Davis"
+    },
+    {
+        "id": 67,
+        "location": "Capacity Planning",
+        "type": "Planning",
+        "status": "In Process",
+        "target": "21",
+        "limit": "24",
+        "reviewer": "Jamik Tashpulatov"
+    }
+]

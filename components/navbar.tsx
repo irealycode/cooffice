@@ -6,22 +6,21 @@ import { Menu, MapPin } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import Logo from "./logo"
+import { Avatar,AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
 
-export default function Navbar() {
+export default function Navbar({logged=false}:{logged?:boolean}) {
   const pathname = usePathname()
 
   const navItems = [
     { href: "/", label: "Home" },
     { href: "/search", label: "Find Spaces" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
   ]
 
   return (
     <header className="sticky flex flex-center items-center justify-center top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="container flex h-16 items-center justify-center px-4">
         <div className="mr-4 hidden md:flex">
-          <Link href="/" className="mr-6 flex items-center space-x-2">
+          <Link href="/" className="mr-12 flex items-center">
             <Logo width="9" font="3xl" />
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -77,14 +76,18 @@ export default function Navbar() {
               <Logo width="9" font="3xl" />
             </Link>
           </div>
-          <nav className="flex items-center space-x-2">
+          {!logged?<nav className="flex items-center space-x-2">
             <Button asChild variant="ghost">
               <Link href="/login">Sign In</Link>
             </Button>
             <Button asChild className="bg-blue-600 hover:bg-blue-500">
               <Link href="/register">Sign Up</Link>
             </Button>
-          </nav>
+          </nav>:
+          <div className="rounded-3xl bg-gray-300 p-1 cursor-pointer">
+            <img src="/assets/svgs/account.svg" className="h-7" />
+          </div>
+          }
         </div>
       </div>
     </header>

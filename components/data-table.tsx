@@ -341,8 +341,12 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof schema>> }) {
 
 export function DataTable({
   data: initialData,
+  simple=false,
+  maxSize=10,
 }: {
-  data: z.infer<typeof schema>[]
+  data: z.infer<typeof schema>[],
+  simple?:boolean,
+  maxSize?:number
 }) {
   const [data, setData] = React.useState(() => initialData)
   const [rowSelection, setRowSelection] = React.useState({})
@@ -354,7 +358,7 @@ export function DataTable({
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [pagination, setPagination] = React.useState({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: maxSize,
   })
   const sortableId = React.useId()
   const sensors = useSensors(
@@ -407,9 +411,9 @@ export function DataTable({
   return (
     <Tabs
       defaultValue="outline"
-      className="flex flex-col justify-start gap-6"
+      className="flex flex-col justify-start"
     >
-      <div className="flex items-center justify-between px-4 lg:px-6">
+      {!simple && <div className="flex items-center justify-between px-4 lg:px-6">
         <Label htmlFor="view-selector" className="sr-only">
           View
         </Label>
@@ -488,7 +492,7 @@ export function DataTable({
             <span className="hidden lg:inline">Add Section</span>
           </Button> */}
         </div>
-      </div>
+      </div>}
       <TabsContent
         value="outline"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"

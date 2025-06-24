@@ -147,7 +147,7 @@ const Map = forwardRef(function MapFunc({locations,onMarkerClick},ref) {
   return (
     <MapContainer center={[33.5731, -7.5898]} zoom={5} scrollWheelZoom={true} style={{ height: height-64, width: (width/2) -10,position:'relative' }}>
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        url="https://tile.jawg.io/2c0a554a-ba75-421c-83d4-7803285cba0b/{z}/{x}/{y}{r}.png?access-token=bIliUDh9A1HuFKGZRll5Yuji0g5UOTL8XxxFSiApb7FYxF5C1XGthws97nOQcQMy"
         attribution='Map tiles by Stamen Design'
       />
       {locations.map((loc, idx) => (
