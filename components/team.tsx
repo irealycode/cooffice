@@ -68,7 +68,7 @@ import { Plus, Edit, Trash2, Mail, Phone, Search } from "lucide-react"
 //   },
 // ]
 
-const roles = ["Admin", "Manager", "Staff", "Member"]
+const roles = ["Manager", "Staff", "Member"]
 const companies = ["TechCorp", "DesignStudio", "StartupInc", "FreelanceWork", "Other"]
 
 interface userType{
@@ -155,7 +155,7 @@ export default function UsersPage({initialUsers}:{initialUsers:userType[]}) {
 
   const getRoleBadgeVariant = (role: string) => {
     switch (role) {
-      case "Admin":
+      case "Manager":
         return "bg-blue-600 hover:bg-blue-500"
       case "Manager":
         return "bg-black hover:bg-gray-800"
