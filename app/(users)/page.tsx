@@ -14,7 +14,7 @@ export default function HomePage() {
         <div className="absolute left-0 top-0  bg-black opacity-20 w-full h-full" style={{zIndex:0,pointerEvents:'none'}} ></div>
         <div className="max-w-xl mx-auto lg:ml-10 relative" style={{zIndex:10}} >
           {/* Main Search Card */}
-          <div className="bg-white rounded-2xl shadow-2xl p-8 lg:p-12 ml-5 ">
+          <div className="bg-white rounded-2xl shadow-2xl px-6 pt-10 pb-6">
             <div className="text-center mb-8">
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center">
                 Find Your Perfect
@@ -26,7 +26,7 @@ export default function HomePage() {
             </div>
 
             {/* Search Form */}
-            <div className="bg-gray-50 rounded-xl p-6 lg:p-8 mb-6">
+            <div className="bg-gray-50 rounded-xl p-6 lg:p-8">
               <div className="grid lg:grid-cols-2 gap-6">
                 {/* City Selection */}
                 <div className="space-y-2">

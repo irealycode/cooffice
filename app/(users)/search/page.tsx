@@ -21,6 +21,7 @@ const Map = dynamic(() => import('@/components/map'), {
 const coworkingSpaces = [
   {
     id: 1,
+    type:1,
     name: "Casablanca Co-Work Hub",
     address: "27 Rue Ibnou Majat, Maarif, Casablanca",
     price: 120,
@@ -39,6 +40,7 @@ const coworkingSpaces = [
   },
   {
     id: 2,
+    type:1,
     name: "Rabat Innovation Lab",
     address: "12 Avenue Fal Ould Oumeir, Agdal, Rabat",
     price: 100,
@@ -57,6 +59,7 @@ const coworkingSpaces = [
   },
   {
     id: 3,
+    type:1,
     name: "Marrakech Creative Space",
     address: "5 Derb El Ferrane, Medina, Marrakech",
     price: 90,
@@ -75,6 +78,7 @@ const coworkingSpaces = [
   },
   {
     id: 4,
+    type:1,
     name: "Tangier Work Loft",
     address: "10 Boulevard Pasteur, Tangier",
     price: 95,
@@ -93,6 +97,7 @@ const coworkingSpaces = [
   },
   {
     id: 5,
+    type:1,
     name: "Agadir Tech Nest",
     address: "Rue Abou Alaa Zahr, Talborjt, Agadir",
     price: 85,
@@ -113,6 +118,7 @@ const coworkingSpaces = [
 
 interface spaceType{
     id: number;
+    type:number,
     name: string;
     address: string;
     price: number;
@@ -129,6 +135,7 @@ interface spaceType{
 
 interface ChatRefType{
   selectSpace : (lat : number, lng: number,id: number) => void;
+  type:1,
   deSelectSpace : () => void
 }
 

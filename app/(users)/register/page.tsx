@@ -16,6 +16,7 @@ export default function RegisterPage() {
     firstName: "",
     lastName: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
     agreeToTerms: false,
@@ -70,6 +71,17 @@ export default function RegisterPage() {
                 placeholder="john@example.com"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                placeholder="+212 658320468"
+                value={formData.phone}
+                onChange={(e) => handleInputChange("phone", e.target.value)}
                 required
               />
             </div>
