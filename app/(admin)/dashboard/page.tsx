@@ -263,10 +263,14 @@ const initialUsers = [
 
 export default function DashboardPage() {
   const [navSelected,setNavSelected] = React.useState(0)
+  const [height,setHeight] = React.useState(0)
+  React.useEffect(()=>{
+    setHeight(window.innerHeight)
+  },[])
   return (
     <SidebarProvider>
       <AppSidebar variant="inset" setNavSelected={setNavSelected} />
-      <SidebarInset style={{width:'calc(100% - 100px)',overflow:'hidden'}}>
+      <SidebarInset style={{width:'calc(100% - 100px)',height:navSelected === 0?height-20:'auto',overflow:'hidden'}}>
         <SiteHeader title={transitionData.navMain[navSelected].title} />
         {navSelected === 0 && <div className="flex flex-1 flex-col"  >
           <div className="@container/main flex flex-1 flex-col">
