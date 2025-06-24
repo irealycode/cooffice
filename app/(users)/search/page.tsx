@@ -172,14 +172,32 @@ export default function SearchPage() {
 
             
             <div className="space-y-4">
-              <div>
-                <Label htmlFor="location">Location</Label>
-                <Input
-                  id="location"
-                  placeholder="Enter city or address"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
+              <div className="grid grid-cols-2 gap-4" >
+                <div>
+                  <Label htmlFor="location">Name</Label>
+                  <Input
+                    id="location"
+                    placeholder="Enter space name"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label>City</Label>
+                  <Select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="All" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="hot-desk">All</SelectItem>
+                      <SelectItem value="hot-desk">Rabat</SelectItem>
+                      <SelectItem value="dedicated-desk">Casablanca</SelectItem>
+                      <SelectItem value="private-office">Tangier</SelectItem>
+                      <SelectItem value="meeting-room">Agadir</SelectItem>
+                      <SelectItem value="meeting-room">Marrakech</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
