@@ -29,7 +29,7 @@ const coworkingSpaces = [
     rating: 4.6,
     reviews: 85,
     images: [
-      "/placeholder.svg?height=400&width=600",
+      "/assets/images/office1.jpg",
       "/placeholder.svg?height=400&width=600g"
     ],
     amenities: ["WiFi", "Meeting Rooms", "Coffee", "Printing", "Air Conditioning"],
@@ -48,7 +48,7 @@ const coworkingSpaces = [
     rating: 4.7,
     reviews: 73,
     images: [
-      "/placeholder.svg?height=400&width=600",
+      "/assets/images/office2.jpg",
       "/placeholder.svg?height=400&width=600"
     ],
     amenities: ["WiFi", "Private Booths", "Library", "Terrace", "Café"],
@@ -67,7 +67,7 @@ const coworkingSpaces = [
     rating: 4.8,
     reviews: 112,
     images: [
-      "/placeholder.svg?height=400&width=600",
+      "/assets/images/office3.jpg",
       "/placeholder.svg?height=400&width=600"
     ],
     amenities: ["WiFi", "Tea Room", "Open Desk", "Events Area", "Community Kitchen"],
@@ -86,7 +86,7 @@ const coworkingSpaces = [
     rating: 4.5,
     reviews: 61,
     images: [
-      "/placeholder.svg?height=400&width=600",
+      "/assets/images/office4.jpg",
       "/placeholder.svg?height=400&width=600"
     ],
     amenities: ["WiFi", "Lounge Area", "Snacks", "Conference Room", "Bike Parking"],
@@ -105,7 +105,7 @@ const coworkingSpaces = [
     rating: 4.4,
     reviews: 49,
     images: [
-      "/placeholder.svg?height=400&width=600",
+      "/assets/images/office5.jpg",
       "/placeholder.svg?height=400&width=600"
     ],
     amenities: ["WiFi", "Phone Booths", "Kitchen", "Lockers", "Chill Zone"],
@@ -267,7 +267,7 @@ export default function SearchPage() {
                         <img
                           src={space.images[0] || "/placeholder.svg"}
                           alt={space.name}
-                          className="rounded-l-lg  w-full md:w-[170px] h-[170px] md:h-auto object-cover"
+                          className="rounded-l-lg  w-full md:w-[170px] h-[170px]  object-cover"
                         />
                       </div>
                       <div className="flex-1 p-4">

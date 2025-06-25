@@ -511,7 +511,7 @@ export default function SpacesPage({initialSpaces}:{initialSpaces : SpaceType[]}
             <CardHeader className="p-0">
               <div className="relative h-48">
                 <Image
-                  src={space.images[0] || "/placeholder.svg"}
+                  src={space.images[0]}
                   alt={space.name}
                   fill
                   className="object-cover rounded-t-lg"
@@ -523,7 +523,7 @@ export default function SpacesPage({initialSpaces}:{initialSpaces : SpaceType[]}
                   {space.availability}
                 </Badge>
                 {space.images.length > 1 && (
-                  <Badge className="absolute top-2 left-2" variant="outline">
+                  <Badge className="absolute top-2 left-2" variant="default">
                     <ImageIcon className="w-3 h-3 mr-1" />
                     {space.images.length}
                   </Badge>
