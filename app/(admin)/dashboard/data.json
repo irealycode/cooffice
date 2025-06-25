@@ -6,7 +6,7 @@
     "status": "In Process",
     "target": "18",
     "limit": "5",
-    "reviewer": "Eddie Lake"
+    "reviewer": "Rabat"
   },
   {
     "id": 2,
@@ -15,7 +15,7 @@
     "status": "Booked",
     "target": "29",
     "limit": "24",
-    "reviewer": "Eddie Lake"
+    "reviewer": "Rabat"
   },
   {
     "id": 3,
@@ -24,7 +24,7 @@
     "status": "Booked",
     "target": "10",
     "limit": "13",
-    "reviewer": "Eddie Lake"
+    "reviewer": "Rabat"
   },
   {
     "id": 4,
@@ -33,7 +33,7 @@
     "status": "Booked",
     "target": "27",
     "limit": "23",
-    "reviewer": "Jamik Tashpulatov"
+    "reviewer": "Casablanca"
   },
   {
     "id": 5,
@@ -42,7 +42,7 @@
     "status": "In Process",
     "target": "2",
     "limit": "16",
-    "reviewer": "Jamik Tashpulatov"
+    "reviewer": "Casablanca"
   },
   {
     "id": 6,
@@ -51,7 +51,7 @@
     "status": "In Process",
     "target": "20",
     "limit": "8",
-    "reviewer": "Jamik Tashpulatov"
+    "reviewer": "Casablanca"
   },
   {
     "id": 7,
@@ -60,7 +60,7 @@
     "status": "In Process",
     "target": "19",
     "limit": "21",
-    "reviewer": "Jamik Tashpulatov"
+    "reviewer": "Casablanca"
   },
   {
     "id": 8,
@@ -69,7 +69,7 @@
     "status": "Booked",
     "target": "25",
     "limit": "26",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 9,
@@ -78,7 +78,7 @@
     "status": "Booked",
     "target": "7",
     "limit": "23",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 10,
@@ -87,7 +87,7 @@
     "status": "Booked",
     "target": "30",
     "limit": "28",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 11,
@@ -96,7 +96,7 @@
     "status": "Booked",
     "target": "9",
     "limit": "31",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 12,
@@ -105,7 +105,7 @@
     "status": "Booked",
     "target": "12",
     "limit": "0",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 13,
@@ -114,7 +114,7 @@
     "status": "Booked",
     "target": "22",
     "limit": "33",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 14,
@@ -123,7 +123,7 @@
     "status": "Booked",
     "target": "15",
     "limit": "34",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 15,
@@ -132,7 +132,7 @@
     "status": "Booked",
     "target": "3",
     "limit": "35",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 16,
@@ -141,7 +141,7 @@
     "status": "In Process",
     "target": "6",
     "limit": "36",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 17,
@@ -150,7 +150,7 @@
     "status": "Booked",
     "target": "4",
     "limit": "37",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 18,
@@ -159,7 +159,7 @@
     "status": "Booked",
     "target": "14",
     "limit": "38",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 19,
@@ -168,7 +168,7 @@
     "status": "Booked",
     "target": "17",
     "limit": "39",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 20,
@@ -177,7 +177,7 @@
     "status": "Booked",
     "target": "11",
     "limit": "40",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 21,
@@ -186,7 +186,7 @@
     "status": "In Process",
     "target": "24",
     "limit": "18",
-    "reviewer": "Maya Johnson"
+    "reviewer": "Agadir"
   },
   {
     "id": 22,
@@ -195,7 +195,7 @@
     "status": "Booked",
     "target": "15",
     "limit": "22",
-    "reviewer": "Carlos Rodriguez"
+    "reviewer": "Tangier"
   },
   {
     "id": 23,
@@ -204,7 +204,7 @@
     "status": "In Process",
     "target": "31",
     "limit": "27",
-    "reviewer": "Sarah Chen"
+    "reviewer": "Rabat"
   },
   {
     "id": 24,
@@ -231,7 +231,7 @@
     "status": "Booked",
     "target": "22",
     "limit": "20",
-    "reviewer": "Thomas Wilson"
+    "reviewer": "Casablanca"
   },
   {
     "id": 27,
@@ -240,7 +240,7 @@
     "status": "In Process",
     "target": "17",
     "limit": "14",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 28,
@@ -249,7 +249,7 @@
     "status": "Booked",
     "target": "26",
     "limit": "30",
-    "reviewer": "Eddie Lake"
+    "reviewer": "Rabat"
   },
   {
     "id": 29,
@@ -258,7 +258,7 @@
     "status": "In Process",
     "target": "13",
     "limit": "16",
-    "reviewer": "Jamik Tashpulatov"
+    "reviewer": "Casablanca"
   },
   {
     "id": 30,
@@ -276,7 +276,7 @@
     "status": "In Process",
     "target": "21",
     "limit": "19",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 32,
@@ -303,7 +303,7 @@
     "status": "Booked",
     "target": "18",
     "limit": "21",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 35,
@@ -321,7 +321,7 @@
     "status": "Booked",
     "target": "14",
     "limit": "17",
-    "reviewer": "Jamik Tashpulatov"
+    "reviewer": "Casablanca"
   },
   {
     "id": 37,
@@ -330,7 +330,7 @@
     "status": "In Process",
     "target": "25",
     "limit": "28",
-    "reviewer": "Eddie Lake"
+    "reviewer": "Rabat"
   },
   {
     "id": 38,
@@ -339,7 +339,7 @@
     "status": "Booked",
     "target": "20",
     "limit": "15",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 39,
@@ -366,7 +366,7 @@
     "status": "In Process",
     "target": "19",
     "limit": "22",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 42,
@@ -384,7 +384,7 @@
     "status": "In Process",
     "target": "11",
     "limit": "14",
-    "reviewer": "Eddie Lake"
+    "reviewer": "Rabat"
   },
   {
     "id": 44,
@@ -393,7 +393,7 @@
     "status": "Booked",
     "target": "24",
     "limit": "27",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 45,
@@ -411,7 +411,7 @@
     "status": "Booked",
     "target": "22",
     "limit": "25",
-    "reviewer": "Jamik Tashpulatov"
+    "reviewer": "Casablanca"
   },
   {
     "id": 47,
@@ -420,7 +420,7 @@
     "status": "In Process",
     "target": "15",
     "limit": "18",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 48,
@@ -438,7 +438,7 @@
     "status": "In Process",
     "target": "13",
     "limit": "16",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 50,
@@ -447,7 +447,7 @@
     "status": "Booked",
     "target": "28",
     "limit": "31",
-    "reviewer": "Eddie Lake"
+    "reviewer": "Rabat"
   },
   {
     "id": 51,
@@ -456,7 +456,7 @@
     "status": "In Process",
     "target": "21",
     "limit": "24",
-    "reviewer": "Jamik Tashpulatov"
+    "reviewer": "Casablanca"
   },
   {
     "id": 52,
@@ -465,7 +465,7 @@
     "status": "Booked",
     "target": "16",
     "limit": "19",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 53,
@@ -483,7 +483,7 @@
     "status": "Booked",
     "target": "14",
     "limit": "17",
-    "reviewer": "Eddie Lake"
+    "reviewer": "Rabat"
   },
   {
     "id": 55,
@@ -492,7 +492,7 @@
     "status": "In Process",
     "target": "27",
     "limit": "30",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 56,
@@ -501,7 +501,7 @@
     "status": "Booked",
     "target": "20",
     "limit": "23",
-    "reviewer": "Jamik Tashpulatov"
+    "reviewer": "Casablanca"
   },
   {
     "id": 57,
@@ -510,7 +510,7 @@
     "status": "In Process",
     "target": "15",
     "limit": "18",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 58,
@@ -519,7 +519,7 @@
     "status": "Booked",
     "target": "30",
     "limit": "33",
-    "reviewer": "Eddie Lake"
+    "reviewer": "Rabat"
   },
   {
     "id": 59,
@@ -528,7 +528,7 @@
     "status": "In Process",
     "target": "23",
     "limit": "26",
-    "reviewer": "Jamik Tashpulatov"
+    "reviewer": "Casablanca"
   },
   {
     "id": 60,
@@ -537,7 +537,7 @@
     "status": "Booked",
     "target": "18",
     "limit": "21",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 61,
@@ -555,7 +555,7 @@
     "status": "Booked",
     "target": "12",
     "limit": "15",
-    "reviewer": "Eddie Lake"
+    "reviewer": "Rabat"
   },
   {
     "id": 63,
@@ -564,7 +564,7 @@
     "status": "In Process",
     "target": "27",
     "limit": "30",
-    "reviewer": "Jamik Tashpulatov"
+    "reviewer": "Casablanca"
   },
   {
     "id": 64,
@@ -573,7 +573,7 @@
     "status": "Booked",
     "target": "22",
     "limit": "25",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   },
   {
     "id": 65,
@@ -591,7 +591,7 @@
     "status": "Booked",
     "target": "24",
     "limit": "27",
-    "reviewer": "Eddie Lake"
+    "reviewer": "Rabat"
   },
   {
     "id": 67,
@@ -600,7 +600,7 @@
     "status": "In Process",
     "target": "21",
     "limit": "24",
-    "reviewer": "Jamik Tashpulatov"
+    "reviewer": "Casablanca"
   },
   {
     "id": 68,
@@ -609,6 +609,6 @@
     "status": "Booked",
     "target": "26",
     "limit": "29",
-    "reviewer": "Assign reviewer"
+    "reviewer": "Marrakech"
   }
 ]

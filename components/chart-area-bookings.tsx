@@ -184,7 +184,7 @@ export function ChartAreaBookings({title,underTitle,filters}:{title:string,under
         <div className="flex gap-2 absolute right-4 top-4">
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
-              className="@[767px]/card:hidden flex w-24"
+              className="@[767px]/card:hidden flex w-40"
               aria-label="Select a value"
             >
               <SelectValue placeholder={filters[0].title} />
@@ -203,7 +203,7 @@ export function ChartAreaBookings({title,underTitle,filters}:{title:string,under
           {/* cities filter */}
           <Select value={city} onValueChange={setCity}>
             <SelectTrigger
-              className="@[767px]/card:hidden flex w-24"
+              className="@[767px]/card:hidden flex w-40"
               aria-label="Select a value"
             >
               <SelectValue placeholder={cities[0]} />
@@ -221,7 +221,7 @@ export function ChartAreaBookings({title,underTitle,filters}:{title:string,under
           </Select>
           <Select value={space} onValueChange={setSpace}>
             <SelectTrigger
-              className="@[767px]/card:hidden flex w-24"
+              className="@[767px]/card:hidden flex w-40"
               aria-label="Select a value"
             >
               <SelectValue placeholder={cities[0]} />

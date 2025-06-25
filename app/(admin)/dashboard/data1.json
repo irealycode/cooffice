@@ -6,7 +6,7 @@
         "status": "In Process",
         "target": "18",
         "limit": "5",
-        "reviewer": "Eddie Lake"
+        "reviewer": "Agadir"
     },
     {
         "id": 5,
@@ -15,7 +15,7 @@
         "status": "In Process",
         "target": "2",
         "limit": "16",
-        "reviewer": "Jamik Tashpulatov"
+        "reviewer": "Casablanca"
     },
     {
         "id": 6,
@@ -24,7 +24,7 @@
         "status": "In Process",
         "target": "20",
         "limit": "8",
-        "reviewer": "Jamik Tashpulatov"
+        "reviewer": "Casablanca"
     },
     {
         "id": 7,
@@ -33,7 +33,7 @@
         "status": "In Process",
         "target": "19",
         "limit": "21",
-        "reviewer": "Jamik Tashpulatov"
+        "reviewer": "Casablanca"
     },
     {
         "id": 16,
@@ -42,7 +42,7 @@
         "status": "In Process",
         "target": "6",
         "limit": "36",
-        "reviewer": "Assign reviewer"
+        "reviewer": "Tangier"
     },
     {
         "id": 21,
@@ -51,7 +51,7 @@
         "status": "In Process",
         "target": "24",
         "limit": "18",
-        "reviewer": "Maya Johnson"
+        "reviewer": "Casablanca"
     },
     {
         "id": 23,
@@ -60,7 +60,7 @@
         "status": "In Process",
         "target": "31",
         "limit": "27",
-        "reviewer": "Sarah Chen"
+        "reviewer": "Rabat"
     },
     {
         "id": 25,
@@ -78,7 +78,7 @@
         "status": "In Process",
         "target": "17",
         "limit": "14",
-        "reviewer": "Assign reviewer"
+        "reviewer": "Tangier"
     },
     {
         "id": 29,
@@ -87,7 +87,7 @@
         "status": "In Process",
         "target": "13",
         "limit": "16",
-        "reviewer": "Jamik Tashpulatov"
+        "reviewer": "Casablanca"
     },
     {
         "id": 31,
@@ -96,7 +96,7 @@
         "status": "In Process",
         "target": "21",
         "limit": "19",
-        "reviewer": "Assign reviewer"
+        "reviewer": "Tangier"
     },
     {
         "id": 33,
@@ -123,7 +123,7 @@
         "status": "In Process",
         "target": "25",
         "limit": "28",
-        "reviewer": "Eddie Lake"
+        "reviewer": "Agadir"
     },
     {
         "id": 39,
@@ -141,7 +141,7 @@
         "status": "In Process",
         "target": "19",
         "limit": "22",
-        "reviewer": "Assign reviewer"
+        "reviewer": "Tangier"
     },
     {
         "id": 43,
@@ -150,7 +150,7 @@
         "status": "In Process",
         "target": "11",
         "limit": "14",
-        "reviewer": "Eddie Lake"
+        "reviewer": "Agadir"
     },
     {
         "id": 45,
@@ -168,7 +168,7 @@
         "status": "In Process",
         "target": "15",
         "limit": "18",
-        "reviewer": "Assign reviewer"
+        "reviewer": "Tangier"
     },
     {
         "id": 49,
@@ -177,7 +177,7 @@
         "status": "In Process",
         "target": "13",
         "limit": "16",
-        "reviewer": "Assign reviewer"
+        "reviewer": "Tangier"
     },
     {
         "id": 51,
@@ -186,7 +186,7 @@
         "status": "In Process",
         "target": "21",
         "limit": "24",
-        "reviewer": "Jamik Tashpulatov"
+        "reviewer": "Casablanca"
     },
     {
         "id": 53,
@@ -204,7 +204,7 @@
         "status": "In Process",
         "target": "27",
         "limit": "30",
-        "reviewer": "Assign reviewer"
+        "reviewer": "Tangier"
     },
     {
         "id": 57,
@@ -213,7 +213,7 @@
         "status": "In Process",
         "target": "15",
         "limit": "18",
-        "reviewer": "Assign reviewer"
+        "reviewer": "Tangier"
     },
     {
         "id": 59,
@@ -222,7 +222,7 @@
         "status": "In Process",
         "target": "23",
         "limit": "26",
-        "reviewer": "Jamik Tashpulatov"
+        "reviewer": "Casablanca"
     },
     {
         "id": 61,
@@ -240,7 +240,7 @@
         "status": "In Process",
         "target": "27",
         "limit": "30",
-        "reviewer": "Jamik Tashpulatov"
+        "reviewer": "Casablanca"
     },
     {
         "id": 65,
@@ -258,6 +258,6 @@
         "status": "In Process",
         "target": "21",
         "limit": "24",
-        "reviewer": "Jamik Tashpulatov"
+        "reviewer": "Casablanca"
     }
 ]
