@@ -2,9 +2,7 @@
 
 import * as React from "react"
 import {
-  ArrowUpCircleIcon,
   BarChartIcon,
-  Building,
   Building2,
   CameraIcon,
   ClipboardListIcon,
@@ -12,13 +10,9 @@ import {
   FileCodeIcon,
   FileIcon,
   FileTextIcon,
-  FolderIcon,
   HelpCircleIcon,
   LayoutDashboardIcon,
-  ListIcon,
-  Locate,
-  LocateFixed,
-  LocateIcon,
+  LucideProps,
   SearchIcon,
   SettingsIcon,
   UsersIcon,
@@ -153,9 +147,27 @@ const data = {
 
 type AppSidebar = React.ComponentProps<typeof Sidebar> & {
   setNavSelected: React.Dispatch<React.SetStateAction<number>>;
+  transitionData :{
+    user: {
+        name: string;
+        email: string;
+        avatar: string;
+    };
+    navMain: {
+        title: string;
+        url: string;
+        icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+    }[];
+    navSecondary: {
+      title: string;
+      url: string;
+      icon: React.ForwardRefExoticComponent<Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>>;
+    }[];
+  }
+  simple?:boolean
 };
 
-export function AppSidebar({ setNavSelected,...props }: AppSidebar) {
+export function AppSidebar({ setNavSelected,transitionData,simple=false,...props }: AppSidebar) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -171,12 +183,12 @@ export function AppSidebar({ setNavSelected,...props }: AppSidebar) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} setNavSelected={setNavSelected} />
+        <NavMain simple={simple} items={transitionData.navMain} setNavSelected={setNavSelected} />
         {/* <NavDocuments items={data.documents} /> */}
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavSecondary items={transitionData.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={transitionData.user} />
       </SidebarFooter>
     </Sidebar>
   )

@@ -12,21 +12,22 @@ import {
 } from "@/components/ui/sidebar"
 
 export function NavMain({
-  items,setNavSelected
+  items,setNavSelected,simple=false
 }: {
   items: {
     title: string
     url: string
     icon?: LucideIcon
   }[],
-  setNavSelected:React.Dispatch<React.SetStateAction<number>>
+  setNavSelected:React.Dispatch<React.SetStateAction<number>>,
+  simple?:boolean
 }) {
 
   const [navSelected,setNavSelected1] = React.useState(0)
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
-        <SidebarMenu>
+        {!simple && <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
             <SidebarMenuButton
               tooltip="Quick Create"
@@ -36,7 +37,7 @@ export function NavMain({
               <span>Add Space</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
-        </SidebarMenu>
+        </SidebarMenu>}
         <SidebarMenu>
           {items.map((item,y) => (
             <SidebarMenuItem key={item.title}>

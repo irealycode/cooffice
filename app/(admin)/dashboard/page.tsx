@@ -8,7 +8,21 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import React from "react"
 
 
-
+import {
+  BarChartIcon,
+  Building2,
+  CameraIcon,
+  ClipboardListIcon,
+  DatabaseIcon,
+  FileCodeIcon,
+  FileIcon,
+  FileTextIcon,
+  HelpCircleIcon,
+  LayoutDashboardIcon,
+  SearchIcon,
+  SettingsIcon,
+  UsersIcon,
+} from "lucide-react"
 import data from "./data.json"
 import fiteredData from "./data1.json"
 import SpacesPage from "@/components/space-management"
@@ -26,23 +40,28 @@ const transitionData = {
     {
       title: "Dashboard",
       url: "#",
+      icon: LayoutDashboardIcon,
     },
     {
       title: "Analytics",
       url: "#",
+      icon: BarChartIcon,
     },
     {
       title: "Spaces",
       url: "#",
+      icon: Building2,
     },
     {
       title: "Team",
       url: "#",
+      icon: UsersIcon,
     },
   ],
   navClouds: [
     {
       title: "Capture",
+      icon: CameraIcon,
       isActive: true,
       url: "#",
       items: [
@@ -58,6 +77,7 @@ const transitionData = {
     },
     {
       title: "Proposal",
+      icon: FileTextIcon,
       url: "#",
       items: [
         {
@@ -72,6 +92,7 @@ const transitionData = {
     },
     {
       title: "Prompts",
+      icon: FileCodeIcon,
       url: "#",
       items: [
         {
@@ -89,28 +110,17 @@ const transitionData = {
     {
       title: "Settings",
       url: "#",
+      icon: SettingsIcon,
     },
     {
       title: "Get Help",
       url: "#",
+      icon: HelpCircleIcon,
     },
     {
       title: "Search",
       url: "#",
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-    },
-    {
-      name: "Reports",
-      url: "#",
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
+      icon: SearchIcon,
     },
   ],
 }
@@ -269,7 +279,7 @@ export default function DashboardPage() {
   },[])
   return (
     <SidebarProvider>
-      <AppSidebar variant="inset" setNavSelected={setNavSelected} />
+      <AppSidebar transitionData={transitionData} variant="inset" setNavSelected={setNavSelected} />
       <SidebarInset style={{width:'calc(100% - 100px)',height:navSelected === 0?height-20:'auto',overflow:'hidden'}}>
         <SiteHeader title={transitionData.navMain[navSelected].title} />
         {navSelected === 0 && <div className="flex flex-1 flex-col"  >
