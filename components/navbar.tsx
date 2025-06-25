@@ -24,7 +24,7 @@ export default function Navbar({logged=false}:{logged?:boolean}) {
             <Logo width="9" font="3xl" />
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
-            {navItems.map((item) => (
+            {navItems.map((item,i) => !logged || i !== 0 ?(
               <Link
                 key={item.href}
                 href={item.href}
@@ -34,7 +34,7 @@ export default function Navbar({logged=false}:{logged?:boolean}) {
               >
                 {item.label}
               </Link>
-            ))}
+            ):null)}
           </nav>
         </div>
 
@@ -54,7 +54,7 @@ export default function Navbar({logged=false}:{logged?:boolean}) {
             </Link>
             <div className="my-4 h-[calc(100vh-8rem)] pb-10 pl-6">
               <div className="flex flex-col space-y-3">
-                {navItems.map((item) => (
+                {navItems.map((item,i) => !logged || i !== 0 ?(
                   <Link
                     key={item.href}
                     href={item.href}
@@ -64,7 +64,7 @@ export default function Navbar({logged=false}:{logged?:boolean}) {
                   >
                     {item.label}
                   </Link>
-                ))}
+                ):null)}
               </div>
             </div>
           </SheetContent>
