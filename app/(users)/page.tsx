@@ -217,7 +217,7 @@ export default function HomePage() {
       </section>
 
 
-      <section className="bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600 py-20 px-4">
+      {/* <section className="bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600 py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-3xl lg:text-4xl font-bold text-white mb-6">Ready to Change Your Workflow?</h2>
           <p className="text-xl text-blue-100 mb-8">
@@ -227,7 +227,7 @@ export default function HomePage() {
             <Link href="/search">Start Searching</Link>
           </Button>
         </div>
-      </section>
+      </section> */}
 
       <footer className="bg-gray-900 text-gray-300 py-14 px-6 lg:px-20">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
