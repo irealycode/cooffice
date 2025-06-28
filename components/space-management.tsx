@@ -19,6 +19,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Plus, Edit, Trash2, MapPin, Users, Star, ImageIcon, X } from "lucide-react"
 import Image from "next/image"
+import { Search } from "lucide-react"
+import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarInput,
+} from "@/components/ui/sidebar"
+
 
 // Space type interface
 interface SpaceType {
@@ -108,6 +115,7 @@ const availabilityOptions = ["Available", "Limited", "Maintenance", "Unavailable
 
 export default function SpacesPage({initialSpaces}:{initialSpaces : SpaceType[]}) {
   const [spaces, setSpaces] = useState<SpaceType[]>(initialSpaces)
+  const [spaceName, setSpaceName] = useState("")
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [editingSpace, setEditingSpace] = useState<SpaceType | null>(null)
@@ -491,6 +499,24 @@ export default function SpacesPage({initialSpaces}:{initialSpaces : SpaceType[]}
         </Card>
       </div>
 
+      <div className="flex w-full" >
+        <SidebarGroup className="p-0 w-full">
+          <SidebarGroupContent className="relative">
+            <Label htmlFor="search" className="sr-only">
+              Search
+            </Label>
+            <SidebarInput
+              id="search"
+              placeholder="Search the spaces..."
+              className="pl-8"
+              onChange={(e)=>setSpaceName(e.target.value)}
+              value={spaceName}
+            />
+            <Search className="pointer-events-none absolute top-1/2 left-2 size-4 -translate-y-1/2 opacity-50 select-none" />
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </div>
+
       {/*  */}
       {/*  */}
       {/*  */}
@@ -506,7 +532,7 @@ export default function SpacesPage({initialSpaces}:{initialSpaces : SpaceType[]}
       {/*  */}
       {/*  */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {spaces.map((space) => (
+        {spaces.filter(s=>s.name.toUpperCase().includes(spaceName.toUpperCase())).map((space) => (
           <Card key={space.id}>
             <CardHeader className="p-0">
               <div className="relative h-48">

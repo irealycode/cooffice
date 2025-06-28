@@ -13,6 +13,7 @@ import { useEffect, useRef, useState } from "react"
 import dynamic from 'next/dynamic';
 // import Map from "@/components/map"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { Checkbox } from "@/components/ui/checkbox"
 
 
 const Map = dynamic(() => import('@/components/map'), {
@@ -163,7 +164,7 @@ export default function SearchPage() {
   }
   return (
     <div className="overflow-y-hidden bg-gray-50 hide-scrollbar">
-      <div className="flex flex-col lg:flex-row overflow-y-scroll lg:overflow-y-hidden hide-scrollbar" style={{height:height-64}}>
+      <div className="flex flex-col lg:flex-row overflow-y-scroll lg:overflow-y-hidden hide-scrollbar" style={{height:height-65}}>
         
         <div className="w-full lg:w-1/2 flex flex-col">
           
@@ -251,6 +252,10 @@ export default function SearchPage() {
                     <SelectItem value="distance">Distance</SelectItem>
                   </SelectContent>
                 </Select>
+                <div className="flex items-center gap-2">
+                  <Checkbox className="border-gray-600 data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700" />
+                  <Label className="text-gray-600">Show Only Available</Label>
+                </div>
               </div>
 
               {coworkingSpaces.filter(s=>s.address.includes(searchQuery)).map((space) => (
@@ -328,7 +333,7 @@ export default function SearchPage() {
         </div>
 
 
-        { selectedSpaceData &&( <div className="absolute animate-slide-in-left h-full flex flex-col bg-white" style={{width:innerWidth>=1024?innerWidth/2:innerWidth,height:height-64}}>
+        { selectedSpaceData &&( <div className="absolute animate-slide-in-left h-full flex flex-col bg-white" style={{width:innerWidth>=1024?innerWidth/2:innerWidth,height:height-65}}>
                 
                 <div className="flex items-center justify-between p-4 border-b bg-white">
                   <Button variant="ghost" size="sm" onClick={()=>{setSelectedSpace(null);mapRef.current?.deSelectSpace()}} className="flex items-center">

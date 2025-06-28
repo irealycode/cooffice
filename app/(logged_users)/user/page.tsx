@@ -441,7 +441,7 @@ export default function UserDashboard() {
                 ) : (
                 <div className="grid gap-4">
                     {upcomingBookings.map((booking) => (
-                    <Card key={booking.id} className="hover:shadow-md transition-shadow h-[190px]">
+                    <Card key={booking.id} className="hover:shadow-md transition-shadow h-[190px] overflow-hidden">
                         <CardContent className="p-0 pr-6 overflow-hidden">
                         <div className="flex items-center space-x-4">
                             <img
@@ -510,7 +510,7 @@ export default function UserDashboard() {
                 ) : (
                 <div className="grid gap-4">
                     {pastBookings.map((booking) => (
-                    <Card key={booking.id} className="hover:shadow-md transition-shadow h-[190px] box-border">
+                    <Card key={booking.id} className="hover:shadow-md transition-shadow h-[190px] box-border  overflow-hidden">
                         <CardContent className="p-0 pr-6 overflow-hidden">
                         <div className="flex items-center space-x-4" >
                             <img
