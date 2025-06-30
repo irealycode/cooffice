@@ -23,7 +23,7 @@ import {
   SettingsIcon,
   UsersIcon,
 } from "lucide-react"
-import data from "./data.json"
+// import data from "./data.json"
 import fiteredData from "./data1.json"
 import SpacesPage from "@/components/space-management"
 import UsersPage from "@/components/team"

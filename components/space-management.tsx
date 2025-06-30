@@ -266,6 +266,12 @@ export default function SpacesPage({initialSpaces}:{initialSpaces : SpaceType[]}
           <h1 className="text-3xl font-bold text-gray-900">Spaces Management</h1>
           <p className="text-gray-600">Manage your coworking spaces</p>
         </div>
+
+        {/*  */}
+        {/*  */}
+        {/* Add space */}
+        {/*  */}
+        {/*  */}
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-blue-600 hover:bg-blue-500" >
@@ -329,7 +335,7 @@ export default function SpacesPage({initialSpaces}:{initialSpaces : SpaceType[]}
               </div>
 
               {/* Pricing and Capacity */}
-              <div className="grid grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label htmlFor="price">Price per day (DH)</Label>
                   <Input
@@ -349,29 +355,6 @@ export default function SpacesPage({initialSpaces}:{initialSpaces : SpaceType[]}
                     value={formData.capacity}
                     onChange={(e) => setFormData({ ...formData, capacity: e.target.value })}
                     placeholder="Number of people"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="rating">Rating</Label>
-                  <Input
-                    id="rating"
-                    type="number"
-                    step="0.1"
-                    min="0"
-                    max="5"
-                    value={formData.rating}
-                    onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
-                    placeholder="0.0 - 5.0"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="reviews">Reviews Count</Label>
-                  <Input
-                    id="reviews"
-                    type="number"
-                    value={formData.reviews}
-                    onChange={(e) => setFormData({ ...formData, reviews: e.target.value })}
-                    placeholder="Number of reviews"
                   />
                 </div>
               </div>
@@ -692,27 +675,7 @@ export default function SpacesPage({initialSpaces}:{initialSpaces : SpaceType[]}
                   onChange={(e) => setFormData({ ...formData, capacity: e.target.value })}
                 />
               </div>
-              <div>
-                <Label htmlFor="edit-rating">Rating</Label>
-                <Input
-                  id="edit-rating"
-                  type="number"
-                  step="0.1"
-                  min="0"
-                  max="5"
-                  value={formData.rating}
-                  onChange={(e) => setFormData({ ...formData, rating: e.target.value })}
-                />
-              </div>
-              <div>
-                <Label htmlFor="edit-reviews">Reviews Count</Label>
-                <Input
-                  id="edit-reviews"
-                  type="number"
-                  value={formData.reviews}
-                  onChange={(e) => setFormData({ ...formData, reviews: e.target.value })}
-                />
-              </div>
+              
             </div>
 
             <div className="grid grid-cols-2 gap-4">

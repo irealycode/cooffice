@@ -5,12 +5,15 @@ import { Label } from "@/components/ui/label"
 
 export function LoginForm({
   className,
+  header="Welcome back!",
+  nosignup=false,
+  noforgot=false,
   ...props
-}: React.ComponentProps<"form">) {
+}: {header? : string,nosignup?:boolean,noforgot?:boolean} & React.ComponentProps<"form">) {
   return (
     <form className={cn("flex flex-col gap-6", className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
-        <h1 className="text-3xl font-bold">Welcome back!</h1>
+        <h1 className="text-3xl font-bold">{header}</h1>
         <p className="text-muted-foreground text-sm text-balance">
           Enter your email below to login to your account
         </p>
@@ -23,12 +26,12 @@ export function LoginForm({
         <div className="grid gap-3">
           <div className="flex items-center">
             <Label htmlFor="password">Password</Label>
-            <a
+            {!noforgot&&<a
               href="#"
               className="ml-auto text-sm underline-offset-4 hover:underline"
             >
               Forgot your password?
-            </a>
+            </a>}
           </div>
           <Input id="password" type="password" required />
         </div>
@@ -36,12 +39,12 @@ export function LoginForm({
           Login
         </Button>
       </div>
-      <div className="text-center text-sm">
+      {!nosignup && <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
         <a href="/register" className="underline underline-offset-4">
           Sign up
         </a>
-      </div>
+      </div>}
     </form>
   )
 }

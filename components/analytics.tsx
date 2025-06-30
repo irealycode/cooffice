@@ -3,7 +3,7 @@ import { DataTable } from "./data-table";
 import { SectionCards } from "./section-cards";
 
 
-import data from "../app/(admin)/dashboard/data.json"
+import data from "../app/admin/(admin)/dashboard/data.json"
 import { ChartAreaBookings } from "./chart-area-bookings";
 
 export default function Analytics(){

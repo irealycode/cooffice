@@ -6,18 +6,21 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
+// import { Separator } from "@/components/ui/separator"
 import { Checkbox } from "@/components/ui/checkbox"
 import Link from "next/link"
 import { useState } from "react"
 import Logo from "@/components/logo"
+
+import axios from "axios"
+import { ip, port } from "@/hooks/hosts"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
     password: "",
     confirmPassword: "",
     agreeToTerms: false,
@@ -25,8 +28,12 @@ export default function RegisterPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle registration logic here
-    console.log("Registration attempt:", formData)
+    axios.post(`http://${ip}:${port}/register`,formData).then((res)=>{
+      console.log(res.data)
+    }).catch((res)=>{
+      console.log(res.status)
+      console.log(res.data)
+    })
   }
 
   const handleInputChange = (field: string, value: string | boolean) => {
@@ -40,14 +47,15 @@ export default function RegisterPage() {
           <Logo font="3xl" width="9" />
         </Link>
       </div>
-      <div className="flex gap-3 flex-col md:flex-row lg:gap-6 items-start justify-center" >
+      {/* <div className="flex gap-3 flex-col md:flex-row lg:gap-6 items-start justify-center" > */}
+        <form onSubmit={handleSubmit} className="flex gap-3 flex-col md:flex-row lg:gap-6 items-start justify-center">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl font-bold">Start Your <span className="text-blue-600 font-medium" >Journey</span></CardTitle>
             <CardDescription>Join our community of professionals</CardDescription>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First Name</Label>
@@ -82,17 +90,16 @@ export default function RegisterPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone number</Label>
+                <Label htmlFor="phoneNumber">Phone number</Label>
                 <Input
-                  id="phone"
+                  id="phoneNumber"
                   type="tel"
                   placeholder="+212 658320468"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  value={formData.phoneNumber}
+                  onChange={(e) => handleInputChange("phoneNumber", e.target.value)}
                   required
                 />
               </div>
-              </form>
           </CardContent>
         </Card>
 
@@ -156,7 +163,9 @@ export default function RegisterPage() {
               </Link>
             </div>   */}
         </Card>
-      </div>
+        </form>
+
+      {/* </div> */}
     </div>
   )
 }
