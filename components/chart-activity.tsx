@@ -56,7 +56,7 @@ interface  dataType{
     userCount:number
 }
 
-export function ChartAreaActivity({title,underTitle,filters,data}:{title:string,underTitle:string,filters:filtersType[],data:dataType[]}) {
+export function ChartAreaActivity({title,underTitle,filters,data,getData}:{title:string,underTitle:string,filters:filtersType[],data:dataType[],getData:(x:number)=>void}) {
     const [timeRange, setTimeRange] = React.useState("7")
 
     console.log(timeRange)
@@ -114,23 +114,8 @@ export function ChartAreaActivity({title,underTitle,filters,data}:{title:string,
           <span className="@[540px]/card:hidden">{underTitle}</span>
         </CardDescription>
         <div className="absolute right-4 top-4">
-          <ToggleGroup
-            type="single"
-            value={timeRange}
-            onValueChange={setTimeRange}
-            variant="outline"
-            className="@[767px]/card:flex hidden"
-          >
-            {filters.map((f,i)=>{
-              return(
-                <ToggleGroupItem key={f.title} value={f.value} className="h-8 px-2.5">
-                  {f.title}
-                </ToggleGroupItem>
-              )
-            })}
-            
-          </ToggleGroup>
-          <Select value={timeRange} onValueChange={setTimeRange}>
+          
+          <Select value={timeRange} onValueChange={(v)=>{setTimeRange(v);getData(parseInt(v))}}>
             <SelectTrigger
               className="@[767px]/card:hidden flex w-40"
               aria-label="Select a value"

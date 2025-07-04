@@ -148,7 +148,7 @@ interface  dataType{
     total:number
 }
 
-export function ChartAreaRevenue({title,underTitle,filters,data}:{title:string,underTitle:string,filters:filtersType[],data:dataType[]}) {
+export function ChartAreaRevenue({title,underTitle,filters,data,getData}:{title:string,underTitle:string,filters:filtersType[],data:dataType[],getData:(x:number)=>void}) {
     const [timeRange, setTimeRange] = React.useState("7")
 
     console.log(timeRange)
@@ -206,7 +206,7 @@ export function ChartAreaRevenue({title,underTitle,filters,data}:{title:string,u
           <span className="@[540px]/card:hidden">{underTitle}</span>
         </CardDescription>
         <div className="absolute right-4 top-4">
-          <ToggleGroup
+          {/* <ToggleGroup
             type="single"
             value={timeRange}
             onValueChange={setTimeRange}
@@ -221,8 +221,8 @@ export function ChartAreaRevenue({title,underTitle,filters,data}:{title:string,u
               )
             })}
             
-          </ToggleGroup>
-          <Select value={timeRange} onValueChange={setTimeRange}>
+          </ToggleGroup> */}
+          <Select value={timeRange} onValueChange={(v)=>{setTimeRange(v);getData(parseInt(v))}}>
             <SelectTrigger
               className="@[767px]/card:hidden flex w-40"
               aria-label="Select a value"
