@@ -35,35 +35,43 @@ import {
 import { format } from "date-fns"
 import Image from "next/image"
 import { Textarea } from "@/components/ui/textarea"
+import { useEffect } from "react"
+import axios from "axios"
+import { ip, port } from "@/hooks/hosts"
+import { date } from "zod"
+import { formatAmenity } from "@/hooks/imports"
+import { comment } from "postcss"
+import { MessagePop } from "@/components/message-pop"
 
 
 interface UserProfile {
-  id: number
-  name: string
+  id: string
+  firstName: string
+  lastName: string
   email: string
   phone: string
-  company: string
-  avatar: string
-  joinDate: string
-  totalBookings: number
-  totalSpent: number
+  createdAt: string
+  phoneNumber: string
+  updatedAt: string
+  isVerified: boolean  
 }
 
 // Booking interface
 interface UserBooking {
-  id: number
-  spaceName: string
-  spaceType: string
-  spaceImage: string
-  startDate: Date
-  endDate: Date
-  status: "Pending" | "Active" | "Completed" | "Cancelled"
-  amount: number
-  bookingDate: Date
-  spaceAddress: string
-  spaceRating: number
-  amenities: string[]
-  notes?: string
+    id: string
+    spaceName: string
+    spaceId: string
+    spaceType: string
+    spaceImage: string
+    startDate: Date
+    endDate: Date
+    status: string
+    amount: number
+    bookingDate: Date
+    spaceAddress: string
+    spaceRating: number
+    amenities: string[]
+    notes?: string
 }
 
 // Sample user data
@@ -90,6 +98,44 @@ interface UserBooking {
   
 //     return result;
 // }
+
+interface rawBooking {
+    acceptedAt: string | null
+    cancellationReason: string | null
+    cancelledAt: string
+    createdAt: string
+    endTime: string
+    id: string
+    processedById: string
+    rejectionReason: string | null
+    renterId: string
+    spaceId: string
+    startTime: string
+    status: string
+    totalAmount: number
+}
+
+interface RawSpace {
+    id:string;
+    name: string;
+    description: string;
+    pricePerHour: number;
+    spaceType: string;
+    discount: number;
+    area: number;
+    capacity: number;
+    address: string;
+    city: string;
+    postalCode: string;
+    country: string;
+    latitude: number;
+    longitude: number;
+    amenities: string[];
+    imageUrls: string[];
+    isAvailable: boolean;
+}
+
+
 
 const StarRating = ({
     rating,
@@ -118,104 +164,18 @@ const StarRating = ({
 }
 
 export default function UserDashboard() {
-    const currentUser: UserProfile = {
-        id: 1,
-        name: "John Doe",
-        email: "john.doe@example.com",
-        phone: "+212 625282630",
-        company: "TechCorp Inc.",
-        avatar: "/placeholder.svg?height=100&width=100",
-        joinDate: "2024-01-15",
-        totalBookings: 12,
-        totalSpent: 850,
-    }
-      
-    const userBookings: UserBooking[] = [
-    {
-        id: 1,
-        spaceName: "Downtown Hub",
-        spaceType: "Hot Desk",
-        spaceImage: "/assets/images/office1.jpg",
-        startDate: new Date(2024, 1, 15),
-        endDate: new Date(2024, 1, 16),
-        status: "Pending",
-        amount: 25,
-        bookingDate: new Date(2024, 1, 10),
-        spaceAddress: "123 Business St, Downtown",
-        spaceRating: 4.8,
-        amenities: ["High-Speed Wifi", "Free Coffee", "Parking"],
-        notes: "Need access to presentation equipment",
-    },
-    {
-        id: 2,
-        spaceName: "Creative Space",
-        spaceType: "Private Office",
-        spaceImage: "/assets/images/office2.jpg",
-        startDate: new Date(2024, 1, 20),
-        endDate: new Date(2024, 1, 22),
-        status: "Pending",
-        amount: 90,
-        bookingDate: new Date(2024, 1, 12),
-        spaceAddress: "456 Art District, Midtown",
-        spaceRating: 4.6,
-        amenities: ["High-Speed Wifi", "Free Coffee", "Printing"],
-        notes: "Team workshop for 3 days",
-    },
-    {
-        id: 3,
-        spaceName: "Tech Valley",
-        spaceType: "Meeting Room",
-        spaceImage: "/assets/images/office3.jpg",
-        startDate: new Date(2024, 0, 25),
-        endDate: new Date(2024, 0, 25),
-        status: "Completed",
-        amount: 35,
-        bookingDate: new Date(2024, 0, 20),
-        spaceAddress: "789 Innovation Ave, Tech District",
-        spaceRating: 4.9,
-        amenities: ["Ultra-Fast Wifi", "Free Coffee", "Phone Booths"],
-        notes: "Client presentation",
-    },
-    {
-        id: 4,
-        spaceName: "Startup Lounge",
-        spaceType: "Event Space",
-        spaceImage: "/assets/images/office4.jpg",
-        startDate: new Date(2024, 0, 18),
-        endDate: new Date(2024, 0, 18),
-        status: "Completed",
-        amount: 120,
-        bookingDate: new Date(2024, 0, 15),
-        spaceAddress: "321 Startup Ave, Innovation District",
-        spaceRating: 4.7,
-        amenities: ["High-Speed Wifi", "Sound System", "Catering"],
-        notes: "Company networking event",
-    },
-    {
-        id: 5,
-        spaceName: "Downtown Hub",
-        spaceType: "Hot Desk",
-        spaceImage: "/assets/images/office5.jpg",
-        startDate: new Date(2024, 0, 10),
-        endDate: new Date(2024, 0, 10),
-        status: "Cancelled",
-        amount: 25,
-        bookingDate: new Date(2024, 0, 8),
-        spaceAddress: "123 Business St, Downtown",
-        spaceRating: 4.8,
-        amenities: ["High-Speed Wifi", "Free Coffee", "Parking"],
-    },
-    ]
-    const [user, setUser] = React.useState<UserProfile>(currentUser)
-    const [bookings] = React.useState<UserBooking[]>(userBookings)
+    
+    const [user, setUser] = React.useState<UserProfile | null>(null)
+    const [bookings,setBookings] = React.useState<UserBooking[]>([])
     const [selectedBooking, setSelectedBooking] = React.useState<UserBooking | null>(null)
+    const [selectedBookingId, setSelectedBookingId] = React.useState<string | null>(null)
     const [isProfileDialogOpen, setIsProfileDialogOpen] = React.useState(false)
     const [isBookingDialogOpen, setIsBookingDialogOpen] = React.useState(false)
     const [profileForm, setProfileForm] = React.useState({
-        name: currentUser.name,
-        email: currentUser.email,
-        phone: currentUser.phone,
-        company: currentUser.company,
+        firstName: "",
+        lastName: "",
+        email: "",
+        phoneNumber: "",
     })
     const [isReviewDialogOpen, setIsReviewDialogOpen] = React.useState(false)
     const [reviewingBooking, setReviewingBooking] = React.useState<UserBooking | null>(null)
@@ -223,12 +183,89 @@ export default function UserDashboard() {
       rating: 0,
       review: "",
     })
+    const [reason, setReason] = React.useState('')
+    const [isCanceling,setIsCanceling] = React.useState(false)
+    const [tkn,setTkn] = React.useState<string | null>(null)
+    const [message,setMessage] = React.useState<null|{type:"good" | "error" | "warning",message:string}>(null)
+    
+    
 
+    useEffect(()=>{
+        const token = localStorage.getItem('token')
+        if (token) {
+            getUserInfo(token) 
+            getUserBookings(token)
+            setTkn(token)
+        }
+        else window.location.assign('/login')
+    },[])
+
+    const getUserInfo = (token : string) =>{
+        axios.get(`http://${ip}:${port}/api/v1/users/`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+              }
+        }).then((res)=>{
+            console.log(res.data)
+            setUser(res.data)
+        }).catch((res)=>{
+            console.log(res)
+            // localStorage.removeItem('token')
+            // window.location.assign('/login')
+        })
+    }
+
+    const getUserBookings = (token : string) =>{
+        axios.get(`http://${ip}:${port}/api/v1/bookings`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+              }
+        }).then((res)=>{
+            const bks = res.data.content
+            console.log('kkk',bks)
+            bks.forEach(async(b : rawBooking ) => {
+                const space : {data : RawSpace} = await axios.get(`http://${ip}:${port}/api/v1/spaces/${b.spaceId}`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                      }
+                })
+                
+                console.log(space?.data)
+                if (space.data) {
+                    setBookings(prev => [...prev,{
+                        id: b.id,
+                        spaceName: space.data.name,
+                        spaceId: space.data.id,
+                        spaceType: formatAmenity(space.data.spaceType),
+                        spaceImage: space.data.imageUrls?.[0],
+                        startDate: new Date(b.startTime),
+                        endDate:new Date(b.endTime),
+                        status: formatAmenity(b.status),
+                        amount: b.totalAmount,
+                        bookingDate: new Date(b.createdAt),
+                        spaceAddress: space.data.address,
+                        spaceRating: 4.5,
+                        amenities: space.data.amenities.map(a=>formatAmenity(a)),
+                        notes: "",
+                    }])
+                }
+                
+            });
+            console.log(res.data.content)
+            // setUser(res.data)
+        }).catch((res)=>{
+            console.log(res)
+            // localStorage.removeItem('token')
+            // window.location.assign('/login')
+        })
+    }
+
+    console.log('bookings',bookings)
     const upcomingBookings = bookings.filter((b) => b.status === "Pending" || b.status === "Active")
-    const pastBookings = bookings.filter((b) => b.status === "Completed" || b.status === "Cancelled")
+    const pastBookings = bookings.filter((b) => b.status === "Booked" || b.status === "Cancelled" || b.status === "Rejected")
 
     const handleUpdateProfile = () => {
-        setUser({ ...user, ...profileForm })
+        // setUser({ ...user, ...profileForm })
         setIsProfileDialogOpen(false)
     }
 
@@ -237,19 +274,40 @@ export default function UserDashboard() {
         setIsBookingDialogOpen(true)
     }
 
-    const handleCancelBooking = (bookingId: number) => {
-        console.log("Cancelling booking:", bookingId)
+    const handleCancel = (id:string) =>{
+        setSelectedBookingId(id)
+        setIsCanceling(true)
+    }
+
+    const handleCancelBooking = () => {
+        if (!reason.trim() && tkn) return
+        axios.post(`http://${ip}:${port}/api/v1/bookings/cancel/${selectedBookingId}?cancellationReason=${reason}`,{},{
+        headers: {
+            Authorization: `Bearer ${tkn}`
+            }
+        }).then((res)=>{
+            if (tkn) {
+                console.log(res.data)
+                setIsCanceling(false)
+                setSelectedBookingId(null)
+                getUserInfo(tkn)
+            }
+            
+        })
+        setReason('')
     }
 
     const getStatusBadgeVariant = (status: string) => {
         switch (status) {
-            case "Accepted":
-                return "bg-blue-600 hover:bg-blue-500"
+            case "Booked":
+                return "bg-green-500 hover:bg-green-400"
             case "Completed":
                 return "bg-black hover:bg-gray-800"
             case "Pending":
                 return "bg-gray-200 text-gray-800 hover:bg-gray-300"
             case "Cancelled":
+                return "bg-gray-400 text-white hover:bg-gray-300"
+            case "Rejected":
                 return "bg-red-400 text-white hover:bg-red-300"
             default:
                 return "bg-gray-200  text-gray-800 hover:bg-gray-300"
@@ -262,33 +320,39 @@ export default function UserDashboard() {
         setIsReviewDialogOpen(true)
     }
     
-    const handleSubmitReview = () => {
-        if (reviewForm.rating === 0) {
-          alert("Please select a rating")
-          return
-        }
     
-        // In a real app, this would make an API call to submit the review
-        console.log("Submitting review:", {
-          bookingId: reviewingBooking?.id,
-          spaceName: reviewingBooking?.spaceName,
-          rating: reviewForm.rating,
-          review: reviewForm.review,
+
+    
+    const sendReview = (spaceId : string) =>{
+        axios.post(`http://${ip}:${port}/api/v1/reviews`,{comment:reviewForm.review,rating:reviewForm.rating,space_id:spaceId},{
+            headers: {
+                Authorization: `Bearer ${tkn}`
+              }
+        }).then((res)=>{
+            console.log(res)
+            setReviewForm({rating:0,review:''})
+            setReviewingBooking(null)
+            setIsReviewDialogOpen(false)
+            setMessage({type:"good",message:"Thank you for your feedback !"})
+            setTimeout(()=>{
+                setMessage(null)
+            },5000)
+        }).catch((res)=>{
+            console.log(res)
+            setMessage({type:"error",message:res.response.data.message??"You have already submited a review for this space !"})
+            setTimeout(()=>{
+                setMessage(null)
+            },5000)
         })
-    
-        setIsReviewDialogOpen(false)
-        setReviewingBooking(null)
-        setReviewForm({ rating: 0, review: "" })
-    
-        // Show success message
-        alert("Thank you for your review!")
     }
 
+    
     
 
 
     return (
         <div className="min-h-screen bg-gray-50">
+            {message && <MessagePop type={message.type} message={message.message} />}
         <div className="max-w-7xl mx-auto px-4 py-8">
             {/* Header */}
             <div className="mb-8">
@@ -311,11 +375,19 @@ export default function UserDashboard() {
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                     <div>
-                        <Label htmlFor="name">Full Name</Label>
+                        <Label htmlFor="name">First Name</Label>
                         <Input
                         id="name"
-                        value={profileForm.name}
-                        onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
+                        value={profileForm.firstName}
+                        onChange={(e) => setProfileForm({ ...profileForm, firstName: e.target.value })}
+                        />
+                    </div>
+                    <div>
+                        <Label htmlFor="name">Last Name</Label>
+                        <Input
+                        id="name"
+                        value={profileForm.lastName}
+                        onChange={(e) => setProfileForm({ ...profileForm, lastName: e.target.value })}
                         />
                     </div>
                     <div>
@@ -331,18 +403,18 @@ export default function UserDashboard() {
                         <Label htmlFor="phone">Phone</Label>
                         <Input
                         id="phone"
-                        value={profileForm.phone}
-                        onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
+                        value={profileForm.phoneNumber}
+                        onChange={(e) => setProfileForm({ ...profileForm, phoneNumber: e.target.value })}
                         />
                     </div>
-                    <div>
+                    {/* <div>
                         <Label htmlFor="company">Company</Label>
                         <Input
                         id="company"
                         value={profileForm.company}
                         onChange={(e) => setProfileForm({ ...profileForm, company: e.target.value })}
                         />
-                    </div>
+                    </div> */}
                     </div>
                     <DialogFooter>
                     <Button onClick={handleUpdateProfile}>Save Changes</Button>
@@ -357,35 +429,31 @@ export default function UserDashboard() {
             <CardContent className="p-6">
                 <div className="flex items-center space-x-6">
                 <Avatar className="w-20 h-20">
-                    <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} />
+                    {/* <AvatarImage src={user.avatar || "/placeholder.svg"} alt={user.name} /> */}
                     <AvatarFallback className="text-lg">
-                    {user.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
+                    {user?.firstName[0].toUpperCase()} {user?.lastName[0].toUpperCase()}
                     </AvatarFallback>
                 </Avatar>
                 <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
-                    <h2 className="text-2xl font-bold">{user.name}</h2>
+                    <h2 className="text-2xl font-bold">{user?.firstName[0].toUpperCase()}{user?.firstName.slice(1)} {user?.lastName[0].toUpperCase()}{user?.lastName.slice(1)}</h2>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-600">
-                    <div className="flex items-center">
-                        <Mail className="w-4 h-4 mr-2" />
-                        {user.email}
-                    </div>
-                    <div className="flex items-center">
-                        <Phone className="w-4 h-4 mr-2" />
-                        {user.phone}
-                    </div>
-                    <div className="flex items-center">
-                        <Building className="w-4 h-4 mr-2" />
-                        {user.company}
-                    </div>
-                    <div className="flex items-center">
-                        <User className="w-4 h-4 mr-2" />
-                        Member since {format(new Date(user.joinDate), "MMM yyyy")}
-                    </div>
+                    <div className="grid grid-cols-1 gap-4 text-sm text-gray-600">
+                        <div className="flex items-center">
+                            <Mail className="w-4 h-4 mr-2" />
+                            {user?.email}
+                        </div>
+                        <div className="flex items-center">
+                            <Phone className="w-4 h-4 mr-2" />
+                            {user?.phoneNumber}
+                        </div>
+                        {/* <div className="flex items-center">
+                            <Building className="w-4 h-4 mr-2" />
+                        </div> */}
+                        <div className="flex items-center">
+                            <User className="w-4 h-4 mr-2" />
+                            Member since {user?format(new Date(user.createdAt), "MMM yyyy"):null}
+                        </div>
                     </div>
                 </div>
                 </div>
@@ -396,7 +464,7 @@ export default function UserDashboard() {
             <Card>
                 <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium">Total Bookings</CardTitle>
-                <div className="text-2xl font-bold">{user.totalBookings}</div>
+                <div className="text-2xl font-bold">{10}</div>
                 </CardHeader>
             </Card>
             <Card>
@@ -435,7 +503,7 @@ export default function UserDashboard() {
                     <CalendarIcon className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">No upcoming bookings</h3>
                     <p className="text-gray-600 mb-4">You don't have any upcoming workspace bookings.</p>
-                    <Button>Browse Spaces</Button>
+                    <Button onClick={()=>location.assign('/search')} >Browse Spaces</Button>
                     </CardContent>
                 </Card>
                 ) : (
@@ -475,14 +543,14 @@ export default function UserDashboard() {
                                 </div>
                             </div>
                             <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-1 text-lg font-semibold">DH {booking.amount} <p className="text-xs text-gray-600 font-medium" >per day</p></div>
+                                <div className="flex items-center gap-1 text-lg font-semibold">DH {booking.amount} <p className="text-xs text-gray-600 font-medium" >in total</p></div>
                                 <div className="flex space-x-2">
                                 <Button variant="outline" size="sm" onClick={() => handleViewBooking(booking)}>
                                     <Eye className="w-4 h-4 mr-1" />
                                     View Details
                                 </Button>
                                 {booking.status === "Pending" && (
-                                    <Button variant="destructive" size="sm" onClick={() => handleCancelBooking(booking.id)}>
+                                    <Button variant="destructive" size="sm" onClick={() => handleCancel(booking.id)}>
                                     <X className="w-4 h-4 mr-1" />
                                     Cancel
                                     </Button>
@@ -544,13 +612,13 @@ export default function UserDashboard() {
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                <div className="flex items-center gap-1 text-lg font-semibold">DH {booking.amount} <p className="text-xs text-gray-600 font-medium" >per day</p></div>
+                                <div className="flex items-center gap-1 text-lg font-semibold">DH {booking.amount} <p className="text-xs text-gray-600 font-medium" >per hour</p></div>
                                     <div className="flex space-x-2">
                                     <Button variant="outline" size="sm" onClick={() => handleViewBooking(booking)}>
                                         <Eye className="w-4 h-4 mr-1" />
                                         View Details
                                     </Button>
-                                    {booking.status === "Completed" && (
+                                    {booking.status === "Booked" && (
                                         <Button variant="outline" onClick={() => handleReviewSpace(booking)} size="sm">
                                         <Star className="w-4 h-4 mr-1" />
                                         Rate Space
@@ -609,7 +677,7 @@ export default function UserDashboard() {
                         </div>
                         <div>
                         <Label className="text-sm font-medium text-gray-500">Time</Label>
-                        
+                        <p className="text-sm">{format(selectedBooking.startDate, "hh:mm")}</p>
                         </div>
                         <div>
                         <Label className="text-sm font-medium text-gray-500">Location</Label>
@@ -617,7 +685,7 @@ export default function UserDashboard() {
                         </div>
                         <div>
                         <Label className="text-sm font-medium text-gray-500">Amount</Label>
-                        <p className="text-sm font-semibold">${selectedBooking.amount}</p>
+                        <p className="text-sm font-semibold">DH {selectedBooking.amount}</p>
                         </div>
                     </div>
 
@@ -658,7 +726,7 @@ export default function UserDashboard() {
                         Close
                     </Button>
                     {selectedBooking.status === "Pending" && (
-                        <Button variant="destructive" onClick={() => handleCancelBooking(selectedBooking.id)}>
+                        <Button variant="destructive" onClick={() => handleCancel(selectedBooking.id)}>
                         Cancel Booking
                         </Button>
                     )}
@@ -696,7 +764,6 @@ export default function UserDashboard() {
                     </div>
                   </div>
 
-                  {/* Rating */}
                   <div>
                     <Label className="text-sm font-medium mb-3 block">How would you rate this space? *</Label>
                     <div className="flex items-center space-x-3">
@@ -715,7 +782,6 @@ export default function UserDashboard() {
                     </div>
                   </div>
 
-                  {/* Review Text */}
                   <div>
                     <Label htmlFor="review-text" className="text-sm font-medium mb-2 block">
                       Share your experience (optional)
@@ -731,13 +797,11 @@ export default function UserDashboard() {
                     <p className="text-xs text-gray-500 mt-1">{reviewForm.review.length}/500 characters</p>
                   </div>
 
-                  {/* Review Guidelines */}
                   <div className="bg-blue-50 p-3 rounded-lg">
                     <h5 className="text-sm font-medium text-blue-900 mb-1">Review Guidelines</h5>
                     <ul className="text-xs text-blue-800 space-y-1">
                       <li>• Be honest and constructive in your feedback</li>
                       <li>• Focus on the space, amenities, and service</li>
-                      <li>• Avoid personal information or inappropriate content</li>
                     </ul>
                   </div>
                 </div>
@@ -745,7 +809,7 @@ export default function UserDashboard() {
                   <Button variant="outline" onClick={() => setIsReviewDialogOpen(false)}>
                     Cancel
                   </Button>
-                  <Button onClick={handleSubmitReview} disabled={reviewForm.rating === 0} className="min-w-[100px]">
+                  <Button onClick={()=>sendReview(reviewingBooking.spaceId)} disabled={reviewForm.rating === 0} className="min-w-[100px]">
                     Submit Review
                   </Button>
                 </DialogFooter>
@@ -754,6 +818,34 @@ export default function UserDashboard() {
           </DialogContent>
         </Dialog>
         </div>
+
+        <Dialog open={isCanceling} onOpenChange={setIsCanceling}>
+            <DialogContent className="max-w-md">
+            <DialogHeader>
+                <DialogTitle>Cancel Booking</DialogTitle>
+            </DialogHeader>
+
+            <div className="grid gap-4">
+                <label className="text-sm font-medium" htmlFor="reason">Cancellation Reason</label>
+                <Textarea
+                id="reason"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder="Please explain why this booking is being canceled..."
+                className="min-h-[100px]"
+                />
+            </div>
+
+            <DialogFooter className="flex justify-between pt-4">
+                <Button variant="outline" onClick={()=>setIsCanceling(false)}>
+                Back
+                </Button>
+                <Button variant="destructive" onClick={handleCancelBooking} disabled={!reason.trim()}>
+                Cancel
+                </Button>
+            </DialogFooter>
+            </DialogContent>
+        </Dialog>
         </div>
     )
 }

@@ -9,18 +9,31 @@ import { MapPin, Users, Wifi, Coffee, Car, Shield } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 
+const officeTypes = [
+  "Office",
+  "Meeting Room",
+  "Coworking Space",
+  "Event Space",
+  "Confrence Room",
+  "Workshop Space"
+]
+
 export default function HomePage() {
+  const token = localStorage.getItem('token')
+  if (token) {
+    window.location.assign('/dashboard')
+    return 
+  }
+
   const [height,setHeight] = React.useState(0)
   React.useEffect(()=>{
     setHeight(window.innerHeight)
   },[])
   return (
     <div className="min-h-screen">
-      {/* Search Card Section */}
       <section style={{height:height-64}} className="relative bg-[url(/assets/images/office1.jpg)] bg-cover bg-center py-20 px-4">
         <div className="absolute left-0 top-0  bg-black opacity-20 w-full h-full" style={{zIndex:0,pointerEvents:'none'}} ></div>
         <div className="max-w-xl mx-auto lg:ml-10 relative" style={{zIndex:10}} >
-          {/* Main Search Card */}
           <div className="bg-white rounded-sm shadow-2xl px-6 pt-10 pb-6">
             <div className="text-center mb-8">
               <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center">
@@ -32,10 +45,8 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Search Form */}
             <div className="bg-gray-50 rounded-xl p-6 lg:p-8">
               <div className="grid lg:grid-cols-2 gap-6">
-                {/* City Selection */}
                 <div className="space-y-2">
                   <Label className="block text-sm font-medium text-gray-700">
                     <MapPin className="w-4 h-4 inline mr-2 text-blue-600" />

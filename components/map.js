@@ -20,7 +20,7 @@ L.Icon.Default.mergeOptions({
 const width = innerWidth
 const height = innerHeight
 
-function OverLay({locations,selectedSpace}) {
+function OverLay({locations,selectedSpace,bookSpace}) {
     const parentMap = useMap();
     return (
         <div className="fixed bottom-4 right-4 shadow-lg" style={{zIndex:9999,width:(width/2)-30,cursor:'default'}} >
@@ -51,7 +51,7 @@ function OverLay({locations,selectedSpace}) {
                           </div>
                           <div className="text-right">
                             <p className="text-xl font-bold">DH {selectedSpace.price}</p>
-                            <p className="text-sm text-gray-600">per day</p>
+                            <p className="text-sm text-gray-600">per hour</p>
                           </div>
                         </div>
 
@@ -89,7 +89,7 @@ function OverLay({locations,selectedSpace}) {
                       </div>
                     </div>
                   </CardContent>
-                    <Button className='absolute bottom-2 right-2 bg-blue-500 hover:bg-blue-400' >
+                    <Button onClick={()=>bookSpace(selectedSpace)} className='absolute bottom-2 right-2 bg-blue-500 hover:bg-blue-400' >
                         Book Now
                     </Button>
                 </Card>
@@ -112,7 +112,7 @@ function FlyToLocation({ lat, lng }) {
     return null;
 }
 
-const Map = forwardRef(function MapFunc({locations,onMarkerClick},ref) {
+const Map = forwardRef(function MapFunc({locations,onMarkerClick,bookSpace},ref) {
     const [selectedSpace, setSelectedSpace] = useState(null)
     const [focusPoint, setFocusPoint] = useState(null);
 
@@ -167,7 +167,7 @@ const Map = forwardRef(function MapFunc({locations,onMarkerClick},ref) {
           
         </Marker>
       ))}
-      {selectedSpace && <OverLay locations={locations} selectedSpace={selectedSpace} />}
+      {selectedSpace && <OverLay bookSpace={bookSpace} locations={locations} selectedSpace={selectedSpace} />}
       {focusPoint && <FlyToLocation lat={focusPoint.lat} lng={focusPoint.lng} />}
     </MapContainer>
   );

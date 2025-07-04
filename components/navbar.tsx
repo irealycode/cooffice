@@ -7,14 +7,45 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import Logo from "./logo"
 import { Avatar,AvatarFallback, AvatarImage } from "@radix-ui/react-avatar"
+import { useEffect,useState } from "react"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 
 export default function Navbar({logged=false}:{logged?:boolean}) {
   const pathname = usePathname()
+  const [token,setToken] = useState<string | null>(null)
+  const [isLogged,setIsLooged] = useState(!!token)
+  const [isLoaded,setIsLoaded] = useState(false)
 
   const navItems = [
     { href: "/", label: "Home" },
     { href: "/search", label: "Find Spaces" },
   ]
+
+  useEffect(()=>{
+    const t = localStorage.getItem('token')
+    if (t) setToken(t)
+    setIsLooged(!!t)
+    setIsLoaded(true)
+  })
+
+  const logout = () =>{
+    localStorage.removeItem('token')
+    location.assign('/login')
+  }
 
   return (
     <header className="sticky flex flex-center items-center justify-center top-0 z-50 w-full border-b bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/60">
@@ -24,7 +55,7 @@ export default function Navbar({logged=false}:{logged?:boolean}) {
             <Logo width="9" font="3xl" />
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
-            {navItems.map((item,i) => !logged || i !== 0 ?(
+            {isLoaded && navItems.map((item,i) => !isLogged || i !== 0 ?(
               <Link
                 key={item.href}
                 href={item.href}
@@ -38,7 +69,7 @@ export default function Navbar({logged=false}:{logged?:boolean}) {
           </nav>
         </div>
 
-        <Sheet>
+        {isLoaded &&<Sheet>
           <SheetTrigger asChild>
             <Button
               variant="ghost"
@@ -68,7 +99,7 @@ export default function Navbar({logged=false}:{logged?:boolean}) {
               </div>
             </div>
           </SheetContent>
-        </Sheet>
+        </Sheet>}
 
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
           <div className="w-full flex-1 md:w-auto md:flex-none">
@@ -76,7 +107,7 @@ export default function Navbar({logged=false}:{logged?:boolean}) {
               <Logo width="9" font="3xl" />
             </Link>
           </div>
-          {!logged?<nav className="flex items-center space-x-2">
+          {isLoaded && !isLogged?<nav className="flex items-center space-x-2">
             <Button asChild variant="ghost">
               <Link href="/login">Sign In</Link>
             </Button>
@@ -84,9 +115,26 @@ export default function Navbar({logged=false}:{logged?:boolean}) {
               <Link href="/register">Sign Up</Link>
             </Button>
           </nav>:
-          <div className="rounded-3xl bg-gray-300 p-1 cursor-pointer">
-            <img src="/assets/svgs/account.svg" className="h-7" />
-          </div>
+          isLoaded && <DropdownMenu  >
+          <DropdownMenuTrigger asChild>
+            <div className="rounded-3xl bg-gray-300 p-1 cursor-pointer">
+              <img src="/assets/svgs/account.svg" className="h-7" />
+            </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-56" align="start" style={{zIndex:99999}}>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuGroup>
+              <DropdownMenuItem onClick={()=>window.location.assign('/dashboard')} >
+                Profile
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={()=>logout()} >
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+          
           }
         </div>
       </div>

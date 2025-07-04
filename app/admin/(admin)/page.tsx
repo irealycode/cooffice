@@ -13,6 +13,7 @@ import {
   Building2,
   CameraIcon,
   ClipboardListIcon,
+  Database,
   DatabaseIcon,
   FileCodeIcon,
   FileIcon,
@@ -24,11 +25,14 @@ import {
   UsersIcon,
 } from "lucide-react"
 // import data from "./data.json"
-import fiteredData from "./data1.json"
+import fiteredData from "./dashboard/data1.json"
 import SpacesPage from "@/components/space-management"
 import UsersPage from "@/components/team"
 import Analytics from "@/components/analytics"
-
+import AllUsersPage from "@/components/all-users"
+import { formatAmenity } from "@/hooks/imports"
+import axios from "axios"
+import { ip, port } from "@/hooks/hosts"
 
 const transitionData = {
   user: {
@@ -56,6 +60,11 @@ const transitionData = {
       title: "Team",
       url: "#",
       icon: UsersIcon,
+    },
+    {
+      title: "Users",
+      url: "#",
+      icon: Database,
     },
   ],
   navClouds: [
@@ -226,7 +235,8 @@ const coworkingSpaces = [
 const initialUsers = [
   {
     id: 1,
-    name: "John Doe",
+    firstName: "John", 
+    lastName:"Doe",
     email: "john@example.com",
     phone: "+212 121245674",
     role: "Manager",
@@ -237,7 +247,8 @@ const initialUsers = [
   },
   {
     id: 2,
-    name: "Jane Smith",
+    firstName: "Jane", 
+    lastName:"Smith",
     email: "jane@example.com",
     phone: "+212 122356784",
     role: "Staff",
@@ -248,7 +259,8 @@ const initialUsers = [
   },
   {
     id: 3,
-    name: "Mike Johnson",
+    firstName: "Mike", 
+    lastName:"Johnson",
     email: "mike@example.com",
     phone: "+212 123467894",
     role: "Staff",
@@ -259,7 +271,8 @@ const initialUsers = [
   },
   {
     id: 4,
-    name: "Sarah Wilson",
+    firstName: "Sara", 
+    lastName:"Wilson",
     email: "sarah@example.com",
     phone: "+212 124578904",
     role: "Staff",
@@ -269,33 +282,204 @@ const initialUsers = [
     joinDate: "2024-01-20",
   },
 ]
+const coworkingAmenities = [
+  "High-speed Wi-Fi",
+  "Ergonomic Chairs",
+  "Standing Desks",
+  "Private Offices",
+  "Meeting Rooms",
+  "Conference Rooms",
+  "Phone Booths",
+  "Printing and Scanning Facilities",
+  "Reception Services",
+  "Mail and Package Handling",
+  "Coffee and Tea Stations",
+  "Kitchenette",
+  "Onsite Café or Snack Bar",
+  "Lounge Areas",
+  "Outdoor Seating",
+  "Event Spaces",
+  "Lockers and Storage",
+  "24/7 Access",
+  "Security Cameras",
+  "Air Conditioning",
+  "Parking Spaces",
+  "Bike Storage",
+  "Showers",
+  "Community Events",
+  "Networking Opportunities",
+  "IT Support",
+  "Cleaning Services",
+  "Accessibility Features",
+  "Pet-friendly Areas"
+];
 
+interface rawBooking {
+  acceptedAt: string | null
+  cancellationReason: string | null
+  cancelledAt: string
+  createdAt: string
+  endTime: string
+  id: string
+  processedById: string
+  rejectionReason: string | null
+  renterId: string
+  spaceId: string
+  startTime: string
+  status: string
+  totalAmount: number
+}
+
+interface RawSpace {
+  id:string;
+  name: string;
+  description: string;
+  pricePerHour: number;
+  spaceType: string;
+  discount: number;
+  area: number;
+  capacity: number;
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  amenities: string[];
+  imageUrls: string[];
+  isAvailable: boolean;
+}
+  
+interface UserBooking {
+    id: string
+    renterId: string
+    spaceName: string
+    spaceType: string
+    spaceImage: string
+    startDate: Date
+    endDate: Date
+    status: string
+    amount: number
+    bookingDate: Date
+    spaceAddress: string
+    spaceRating: number
+    amenities: string[]
+    notes?: string
+}
+
+interface SumType{
+  activeUsersLastMonth: number
+  newUsersLastMonth: number
+  revenueGrowthPercent: number
+  totalRevenue: number
+}
 
 export default function DashboardPage() {
+  const [bookings, setBookings] = React.useState<UserBooking[]>([])
   const [navSelected,setNavSelected] = React.useState(0)
   const [height,setHeight] = React.useState(0)
+  const [token,setToken] = React.useState<string | null>(null)
+  const [sum,setSum] = React.useState<SumType | null>(null)
   React.useEffect(()=>{
     setHeight(window.innerHeight)
+    const t = localStorage.getItem('staff_token')
+    if(!t){
+      window.location.assign('/login')
+    }
+    if (t) {
+      setToken(t)
+      getUserBookings(t)
+      getSummary(t)
+    }
+    
   },[])
-  return (
-    <SidebarProvider>
-      <AppSidebar transitionData={transitionData} variant="inset" setNavSelected={setNavSelected} />
-      <SidebarInset style={{width:'calc(100% - 100px)',height:navSelected === 0?height-20:'auto',overflow:'hidden'}}>
-        <SiteHeader title={transitionData.navMain[navSelected].title} />
-        {navSelected === 0 && <div className="flex flex-1 flex-col"  >
-          <div className="@container/main flex flex-1 flex-col">
-            <div className="flex flex-col py-2 gap-2 md:py-2">
-              <SectionCards />
-              <p className="pl-6 mt-1 font-semibold text-2xl" >Lastest Bookings</p>
-              <DataTable data={fiteredData} simple maxSize={3} />
-            </div>
-          </div>
-        </div>}
-        {navSelected === 1 && <Analytics />}
-        {navSelected === 2 && <SpacesPage initialSpaces={coworkingSpaces} />}
-        {navSelected === 3 && <UsersPage initialUsers={initialUsers} />}
 
-      </SidebarInset>
-    </SidebarProvider>
+  const getUserBookings = (tkn:string) =>{
+    axios.get(`http://${ip}:${port}/api/v1/bookings`,{
+        headers: {
+            Authorization: `Bearer ${tkn}`
+          }
+    }).then((res)=>{
+        const bks = res.data.content
+        setBookings([])
+        bks.forEach(async(b : rawBooking ) => {
+            const space : {data : RawSpace} = await axios.get(`http://${ip}:${port}/api/v1/spaces/${b.spaceId}`,{
+                headers: {
+                    Authorization: `Bearer ${tkn}`
+                  }
+            })
+
+            if (space.data) {
+                setBookings(prev => [...prev,{
+                    id: b.id,
+                    renterId: b.renterId,
+                    spaceName: space.data.name,
+                    spaceType: formatAmenity(space.data.spaceType),
+                    spaceImage: space.data.imageUrls?.[0],
+                    startDate: new Date(b.startTime),
+                    endDate:new Date(b.endTime),
+                    status: formatAmenity(b.status),
+                    amount: b.totalAmount,
+                    bookingDate: new Date(b.createdAt),
+                    spaceAddress: space.data.address,
+                    spaceRating: 4.5,
+                    amenities: space.data.amenities.map(a=>formatAmenity(a)),
+                    notes: "",
+                }])
+            }
+            
+        });
+        
+        // setUser(res.data)
+    }).catch((res)=>{
+        console.log(res)
+        // localStorage.removeItem('token')
+        // window.location.assign('/login')
+    })
+}
+
+  const getSummary = (tkn:string) =>{
+    axios.get(`http://${ip}:${port}/api/v1/analytics/summary`,{
+      headers: {
+          Authorization: `Bearer ${tkn}`
+        }
+    }).then((res)=>{
+      console.log('sum',res.data)
+      setSum(res.data)
+    })
+  }
+
+  console.log(bookings.map(b=>({id:b.id,spaceName:b.spaceName,spaceType:b.spaceType,status:b.status,bookingDate:b.bookingDate.toString()})))
+  if (token) {
+    return (
+      <SidebarProvider>
+        <AppSidebar transitionData={transitionData} variant="inset" setNavSelected={setNavSelected} />
+        <SidebarInset style={{width:'calc(100% - 100px)',height:navSelected === 0?height-20:'auto',overflow:'hidden'}}>
+          <SiteHeader title={transitionData.navMain[navSelected].title} />
+          {navSelected === 0 && <div className="flex flex-1 flex-col"  >
+            <div className="@container/main flex flex-1 flex-col">
+              <div className="flex flex-col py-2 gap-2 md:py-2">
+                {sum && <SectionCards summary={sum} />}
+                <p className="pl-6 mt-1 font-semibold text-2xl" >Lastest Bookings</p>
+                {bookings.length > 0 &&<DataTable data={bookings.map(b=>({id:b.id,spaceName:b.spaceName,spaceType:b.spaceType,status:b.status,bookingDate:b.bookingDate.toString()}))} simple maxSize={3} />}
+              </div>
+            </div>
+          </div>}
+          {navSelected === 1 && <Analytics token={token} bookings={bookings.map(b=>({id:b.id,spaceName:b.spaceName,spaceType:b.spaceType,status:b.status,bookingDate:b.bookingDate.toString()}))} />}
+          {navSelected === 2 && <SpacesPage  token={token} />}
+          {navSelected === 3 && <UsersPage  token={token} />}
+          {navSelected === 4 && <AllUsersPage  token={token} />}
+
+        </SidebarInset>
+      </SidebarProvider>
+    )
+  }
+
+  return(
+    <div className="min-w-screen min-h-screen flex items-center justify-center" >
+      <img src="/assets/svgs/loading.svg" className="w-10 animate-spin" />
+      {/* <h1>ok</h1> */}
+    </div>
   )
+  
 }

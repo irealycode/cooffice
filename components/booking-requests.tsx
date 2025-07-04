@@ -33,6 +33,11 @@ import {
 } from "lucide-react"
 import { format } from "date-fns"
 import Image from "next/image"
+import axios from "axios"
+import { ip, port } from "@/hooks/hosts"
+import { formatAmenity } from "@/hooks/imports"
+import { useEffect } from "react"
+import { Textarea } from "./ui/textarea"
 
 // Booking Request interface
 interface BookingRequest {
@@ -172,43 +177,159 @@ const initialBookingRequests: BookingRequest[] = [
   },
 ]
 
-export default function BookingRequests() {
-  const [bookingRequests, setBookingRequests] = useState<BookingRequest[]>(initialBookingRequests)
-  const [selectedRequest, setSelectedRequest] = useState<BookingRequest | null>(null)
+interface rawBooking {
+  acceptedAt: string | null
+  cancellationReason: string | null
+  cancelledAt: string
+  createdAt: string
+  endTime: string
+  id: string
+  processedById: string
+  rejectionReason: string | null
+  renterId: string
+  spaceId: string
+  startTime: string
+  status: string
+  totalAmount: number
+}
+
+interface RawSpace {
+  id:string;
+  name: string;
+  description: string;
+  pricePerHour: number;
+  spaceType: string;
+  discount: number;
+  area: number;
+  capacity: number;
+  address: string;
+  city: string;
+  postalCode: string;
+  country: string;
+  latitude: number;
+  longitude: number;
+  amenities: string[];
+  imageUrls: string[];
+  isAvailable: boolean;
+}
+
+interface UserBooking {
+    id: string
+    renterId: string
+    renterFirstName: string
+    renterLastName: string
+    renterEmail: string
+    spaceName: string
+    spaceType: string
+    spaceImage: string
+    startDate: Date
+    endDate: Date
+    status: string
+    amount: number
+    bookingDate: Date
+    spaceAddress: string
+    spaceRating: number
+    amenities: string[]
+    notes?: string
+}
+
+interface RawUser {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  phoneNumber: string
+  isVerified: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export default function BookingRequests({token}:{token:string}) {
+  const [bookingRequests, setBookingRequests] = useState<UserBooking[]>([])
+  const [selectedRequest, setSelectedRequest] = useState<UserBooking | null>(null)
+  const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null)
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [urgencyFilter, setUrgencyFilter] = useState("all")
+  // const [statusFilter, setStatusFilter] = useState("all")
+  // const [urgencyFilter, setUrgencyFilter] = useState("all")
+  const [reason, setReason] = useState('')
+  const [isRejecting,setIsRejecting] = useState(false)
 
-  const filteredRequests = bookingRequests.filter((request) => {
-    const matchesSearch =
-      request.userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.spaceName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      request.userEmail.toLowerCase().includes(searchTerm.toLowerCase())
 
-    const matchesStatus = statusFilter === "all" || request.status === statusFilter
-    const matchesUrgency = urgencyFilter === "all" || request.urgency === urgencyFilter
+  useEffect(()=>{
+    getUserBookings()
+  },[])
 
-    return matchesSearch && matchesStatus && matchesUrgency
-  })
+  
 
-  const pendingRequests = filteredRequests.filter((r) => r.status === "Pending")
-  const approvedRequests = filteredRequests.filter((r) => r.status === "Approved")
-  const rejectedRequests = filteredRequests.filter((r) => r.status === "Rejected")
 
-  const handleApproveRequest = (requestId: number) => {
+  const getUserBookings = () =>{
+      axios.get(`http://${ip}:${port}/api/v1/bookings`,{
+          headers: {
+              Authorization: `Bearer ${token}`
+            }
+      }).then((res)=>{
+          const bks = res.data.content
+          setBookingRequests([])
+          bks.forEach(async(b : rawBooking ) => {
+              const space : {data : RawSpace} = await axios.get(`http://${ip}:${port}/api/v1/spaces/${b.spaceId}`,{
+                  headers: {
+                      Authorization: `Bearer ${token}`
+                    }
+              })
+
+              const renter : {data : RawUser} = await axios.get(`http://${ip}:${port}/api/v1/users/${b.renterId}`,{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                  }
+              })
+              console.log(space?.data)
+              if (space.data && renter.data) {
+                  setBookingRequests(prev => [...prev,{
+                      id: b.id,
+                      renterId: b.renterId,
+                      renterFirstName: renter.data.firstName,
+                      renterLastName: renter.data.lastName,
+                      renterEmail: renter.data.email,
+                      spaceName: space.data.name,
+                      spaceType: formatAmenity(space.data.spaceType),
+                      spaceImage: space.data.imageUrls?.[0],
+                      startDate: new Date(b.startTime),
+                      endDate:new Date(b.endTime),
+                      status: formatAmenity(b.status),
+                      amount: b.totalAmount,
+                      bookingDate: new Date(b.createdAt),
+                      spaceAddress: space.data.address,
+                      spaceRating: 4.5,
+                      amenities: space.data.amenities.map(a=>formatAmenity(a)),
+                      notes: "",
+                  }])
+              }
+              
+          });
+          console.log('s',res.data.content)
+          
+          // setUser(res.data)
+      }).catch((res)=>{
+          console.log(res)
+          // localStorage.removeItem('token')
+          // window.location.assign('/login')
+      })
+  }
+
+  
+
+  const pendingRequests = bookingRequests.filter((r) => r.status === "Pending")
+
+  const handleApproveRequest = (requestId: string) => {
     setBookingRequests((prev) =>
       prev.map((request) => (request.id === requestId ? { ...request, status: "Approved" as const } : request)),
     )
   }
 
-  const handleRejectRequest = (requestId: number) => {
-    setBookingRequests((prev) =>
-      prev.map((request) => (request.id === requestId ? { ...request, status: "Rejected" as const } : request)),
-    )
-  }
+  
 
-  const handleViewDetails = (request: BookingRequest) => {
+  const handleViewDetails = (request: UserBooking) => {
     setSelectedRequest(request)
     setIsDetailsDialogOpen(true)
   }
@@ -226,30 +347,37 @@ export default function BookingRequests() {
     }
   }
 
-  const getUrgencyBadgeVariant = (urgency: string) => {
-    switch (urgency) {
-      case "High":
-        return "destructive"
-      case "Medium":
-        return "secondary"
-      case "Low":
-        return "outline"
-      default:
-        return "outline"
-    }
+  const handleAccept = (id : string) => {
+    axios.post(`http://${ip}:${port}/api/v1/bookings/accept/${id}?rejectionReason=none`,{},{
+      headers: {
+          Authorization: `Bearer ${token}`
+        }
+    }).then((res)=>{
+      console.log(res)
+      setBookingRequests(prev => prev.filter(b=>b.id !== id))
+      setSelectedRequestId(null)
+    }).catch((res)=>{
+      console.log(res)
+    })
   }
 
-  const getUrgencyIcon = (urgency: string) => {
-    switch (urgency) {
-      case "High":
-        return <AlertCircle className="w-4 h-4" />
-      case "Medium":
-        return <Clock className="w-4 h-4" />
-      case "Low":
-        return <CheckCircle className="w-4 h-4" />
-      default:
-        return null
-    }
+  const handleReject = () => {
+    if (!reason.trim()) return
+    axios.post(`http://${ip}:${port}/api/v1/bookings/reject/${selectedRequestId}?rejectionReason=${reason}`,{},{
+      headers: {
+          Authorization: `Bearer ${token}`
+        }
+    }).then((res)=>{
+      console.log(res)
+      setIsRejecting(false)
+      setBookingRequests(prev => prev.filter(b=>b.id !== selectedRequestId))
+      setSelectedRequestId(null)
+    })
+    setReason('')
+  }
+  const handleRejectRequest = (requestId: string) => {
+    setIsRejecting(true)
+    setSelectedRequestId(requestId)
   }
 
   return (
@@ -267,44 +395,14 @@ export default function BookingRequests() {
                 className="pl-8"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="Pending">Pending</SelectItem>
-                <SelectItem value="Approved">Approved</SelectItem>
-                <SelectItem value="Rejected">Rejected</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select value={urgencyFilter} onValueChange={setUrgencyFilter}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Filter by urgency" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Urgency</SelectItem>
-                <SelectItem value="High">High</SelectItem>
-                <SelectItem value="Medium">Medium</SelectItem>
-                <SelectItem value="Low">Low</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="pending" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-1">
               <TabsTrigger value="pending" className="flex items-center">
                 <AlertCircle className="w-4 h-4 mr-2" />
                 Pending ({pendingRequests.length})
-              </TabsTrigger>
-              <TabsTrigger value="approved" className="flex items-center">
-                <CheckCircle className="w-4 h-4 mr-2" />
-                Approved ({approvedRequests.length})
-              </TabsTrigger>
-              <TabsTrigger value="rejected" className="flex items-center">
-                <XCircle className="w-4 h-4 mr-2" />
-                Rejected ({rejectedRequests.length})
               </TabsTrigger>
             </TabsList>
 
@@ -331,7 +429,7 @@ export default function BookingRequests() {
                             <div className="text-right">
                               <div className="font-semibold text-lg">DH {request.amount}</div>
                               <div className="text-sm text-gray-600">
-                                Requested {format(request.requestDate, "MMM d")}
+                                Requested {format(new Date(request.bookingDate), "MMM d")}
                               </div>
                             </div>
                           </div>
@@ -339,11 +437,11 @@ export default function BookingRequests() {
                           <div className="text-sm text-gray-600 mb-4">
                             <div className="flex items-center mb-1">
                               <User className="w-4 h-4 mr-2" />
-                              {request.userName}
+                              {request.renterFirstName[0].toUpperCase()}{request.renterFirstName.slice(1)} {request.renterLastName[0].toUpperCase()}{request.renterLastName.slice(1)}
                             </div>
                             <div className="flex items-center">
                               <CalendarIcon className="w-4 h-4 mr-2" />
-                              {format(request.startDate, "MMM d, yyyy")}
+                              {format(new Date(request.startDate), "MMM d, yyyy")}
                             </div>
                           </div>
 
@@ -351,17 +449,13 @@ export default function BookingRequests() {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                               <Avatar className="w-8 h-8">
-                                <AvatarImage src={request.userAvatar || "/placeholder.svg"} />
                                 <AvatarFallback>
-                                  {request.userName
-                                    .split(" ")
-                                    .map((n) => n[0])
-                                    .join("")}
+                                {request.renterFirstName[0].toUpperCase()} {request.renterLastName[0].toUpperCase()}
                                 </AvatarFallback>
                               </Avatar>
                               <div className="text-sm">
-                                <div className="font-medium">{request.userName}</div>
-                                <div className="text-gray-600">{request.userEmail}</div>
+                                <div className="font-medium" >{request.renterFirstName[0].toUpperCase()}{request.renterFirstName.slice(1)} {request.renterLastName[0].toUpperCase()}{request.renterLastName.slice(1)}</div>
+                                <div className="text-gray-600">{request.renterEmail}</div>
                               </div>
                             </div>
 
@@ -374,7 +468,7 @@ export default function BookingRequests() {
                                 <X className="w-4 h-4 mr-1" />
                                 Reject
                               </Button>
-                              <Button size="sm" className="bg-green-400 hover:bg-green-500" onClick={() => handleApproveRequest(request.id)}>
+                              <Button size="sm" className="bg-green-400 hover:bg-green-500" onClick={() => handleAccept(request.id)}>
                                 <Check className="w-4 h-4 mr-1" />
                                 Approve
                               </Button>
@@ -388,128 +482,7 @@ export default function BookingRequests() {
               )}
             </TabsContent>
 
-            <TabsContent value="approved" className="space-y-4 mt-6">
-              {approvedRequests.map((request) => (
-                <Card key={request.id} className="hover:shadow-md transition-shadow border-green-200">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-4">
-                      
-
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <h3 className="font-semibold text-lg">{request.spaceName}</h3>
-                            <div className="flex items-center space-x-2 text-sm text-gray-600">
-                              <Badge variant="outline">{request.spaceType}</Badge>
-                              <Badge variant={getStatusBadgeVariant(request.status)}>{request.status}</Badge>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <div className="font-semibold text-lg text-green-600">DH {request.amount}</div>
-                            <div className="text-sm text-gray-600">Approved</div>
-                          </div>
-                        </div>
-
-                        <div className="text-sm text-gray-600 mb-4">
-                          <div className="flex items-center mb-1">
-                            <User className="w-4 h-4 mr-2" />
-                            {request.userName}
-                          </div>
-                          <div className="flex items-center">
-                            <CalendarIcon className="w-4 h-4 mr-2" />
-                            {format(request.startDate, "MMM d, yyyy")}
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <Avatar className="w-8 h-8">
-                              <AvatarImage src={request.userAvatar || "/placeholder.svg"} />
-                              <AvatarFallback>
-                                {request.userName
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="text-sm">
-                              <div className="font-medium">{request.userName}</div>
-                              <div className="text-gray-600">{request.userEmail}</div>
-                            </div>
-                          </div>
-
-                          <Button variant="outline" size="sm" onClick={() => handleViewDetails(request)}>
-                            <Eye className="w-4 h-4 mr-1" />
-                            View Details
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </TabsContent>
-
-            <TabsContent value="rejected" className="space-y-4 mt-6">
-              {rejectedRequests.map((request) => (
-                <Card key={request.id} className="hover:shadow-md transition-shadow border-red-200">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-4">
-
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
-                          <div>
-                            <h3 className="font-semibold text-lg text-gray-700">{request.spaceName}</h3>
-                            <div className="flex items-center space-x-2 text-sm text-gray-600">
-                              <Badge variant="outline">{request.spaceType}</Badge>
-                              <Badge variant={getStatusBadgeVariant(request.status)}>{request.status}</Badge>
-                            </div>
-                          </div>
-                          <div className="text-right">
-                            <div className="font-semibold text-lg text-gray-500">DH {request.amount}</div>
-                            <div className="text-sm text-red-600">Rejected</div>
-                          </div>
-                        </div>
-
-                        <div className="text-sm text-gray-600 mb-4">
-                          <div className="flex items-center mb-1">
-                            <User className="w-4 h-4 mr-2" />
-                            {request.userName}
-                          </div>
-                          <div className="flex items-center">
-                            <CalendarIcon className="w-4 h-4 mr-2" />
-                            {format(request.startDate, "MMM d, yyyy")}
-                          </div>
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <Avatar className="w-8 h-8">
-                              <AvatarImage src={request.userAvatar || "/placeholder.svg"} />
-                              <AvatarFallback>
-                                {request.userName
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div className="text-sm">
-                              <div className="font-medium">{request.userName}</div>
-                              <div className="text-gray-600">{request.userEmail}</div>
-                            </div>
-                          </div>
-
-                          <Button variant="outline" size="sm" onClick={() => handleViewDetails(request)}>
-                            <Eye className="w-4 h-4 mr-1" />
-                            View Details
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </TabsContent>
+            
           </Tabs>
         </CardContent>
 
@@ -533,14 +506,10 @@ export default function BookingRequests() {
                     <div className="flex items-center space-x-2 mt-1">
                       <Badge variant="outline">{selectedRequest.spaceType}</Badge>
                       <Badge variant={getStatusBadgeVariant(selectedRequest.status)}>{selectedRequest.status}</Badge>
-                      <Badge variant={getUrgencyBadgeVariant(selectedRequest.urgency)} className="flex items-center">
-                        {getUrgencyIcon(selectedRequest.urgency)}
-                        <span className="ml-1">{selectedRequest.urgency} Priority</span>
-                      </Badge>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-bold">${selectedRequest.amount}</div>
+                    <div className="text-2xl font-bold">DH {selectedRequest.amount}</div>
                     <div className="text-sm text-gray-600">Total Amount</div>
                   </div>
                 </div>
@@ -551,27 +520,20 @@ export default function BookingRequests() {
                   <div className="grid grid-cols-2 gap-4">
                     <div className="flex items-center space-x-3">
                       <Avatar>
-                        <AvatarImage src={selectedRequest.userAvatar || "/placeholder.svg"} />
                         <AvatarFallback>
-                          {selectedRequest.userName
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
+                        {selectedRequest.renterFirstName[0]} {selectedRequest.renterLastName[0]}
+
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <div className="font-medium">{selectedRequest.userName}</div>
+                        <div className="font-medium">{selectedRequest.renterFirstName[0].toUpperCase()}{selectedRequest.renterFirstName.slice(1)} {selectedRequest.renterFirstName[0].toUpperCase()}{selectedRequest.renterFirstName.slice(1)}</div>
                         <div className="text-sm text-gray-600">Customer</div>
                       </div>
                     </div>
                     <div className="space-y-2">
                       <div className="flex items-center text-sm">
                         <Mail className="w-4 h-4 mr-2 text-gray-400" />
-                        {selectedRequest.userEmail}
-                      </div>
-                      <div className="flex items-center text-sm">
-                        <Phone className="w-4 h-4 mr-2 text-gray-400" />
-                        {selectedRequest.userPhone}
+                        {selectedRequest.renterEmail}
                       </div>
                     </div>
                   </div>
@@ -588,33 +550,16 @@ export default function BookingRequests() {
                     <div>
                       <div className="text-sm text-gray-600">Time</div>
                       <div className="font-medium">
-                        {selectedRequest.startTime} - {selectedRequest.endTime}
+                        {format(selectedRequest.startDate,"dd MMM yyyy")} - {format(selectedRequest.endDate,"dd MMM yyyy")}
                       </div>
                     </div>
                     <div>
                       <div className="text-sm text-gray-600">Location</div>
                       <div className="font-medium">{selectedRequest.spaceAddress}</div>
                     </div>
-                    <div>
-                      <div className="text-sm text-gray-600">Guest Count</div>
-                      <div className="font-medium">{selectedRequest.guestCount} people</div>
-                    </div>
                   </div>
                 </div>
 
-                {/* Special Requests */}
-                {selectedRequest.specialRequests && selectedRequest.specialRequests.length > 0 && (
-                  <div>
-                    <h4 className="font-semibold mb-3">Special Requests</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedRequest.specialRequests.map((request, index) => (
-                        <Badge key={index} variant="secondary">
-                          {request}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
                 {/* Notes */}
                 {selectedRequest.notes && (
@@ -630,7 +575,7 @@ export default function BookingRequests() {
                 <div>
                   <h4 className="font-semibold mb-3">Request Timeline</h4>
                   <div className="text-sm text-gray-600">
-                    <div>Requested on: {format(selectedRequest.requestDate, "MMMM d, yyyy 'at' h:mm a")}</div>
+                    <div>Requested on: {format(selectedRequest.bookingDate, "MMMM d, yyyy 'at' h:mm a")}</div>
                     <div>Request ID: #{selectedRequest.id.toString().padStart(6, "0")}</div>
                   </div>
                 </div>
@@ -654,9 +599,10 @@ export default function BookingRequests() {
                     </Button>
                     <Button
                       onClick={() => {
-                        handleApproveRequest(selectedRequest.id)
+                        handleAccept(selectedRequest.id)
                         setIsDetailsDialogOpen(false)
                       }}
+                      className="bg-green-400 hover:bg-green-500"
                     >
                       <Check className="w-4 h-4 mr-1" />
                       Approve
@@ -666,6 +612,34 @@ export default function BookingRequests() {
               </DialogFooter>
             </>
           )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isRejecting} onOpenChange={setIsRejecting}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Reject Booking</DialogTitle>
+          </DialogHeader>
+
+          <div className="grid gap-4">
+            <label className="text-sm font-medium" htmlFor="reason">Rejection Reason</label>
+            <Textarea
+              id="reason"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="Please explain why this booking is being rejected..."
+              className="min-h-[100px]"
+            />
+          </div>
+
+          <DialogFooter className="flex justify-between pt-4">
+            <Button variant="outline" onClick={()=>setIsRejecting(false)}>
+              Back
+            </Button>
+            <Button variant="destructive" onClick={handleReject} disabled={!reason.trim()}>
+              Reject
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

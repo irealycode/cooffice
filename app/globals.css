@@ -101,3 +101,38 @@ body {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;     /* Firefox */
 }
+
+@keyframes popdown {
+  0%{
+    opacity: 0;
+    transform: translateX(-50%) translateY(-100%);
+  }
+  10%{
+    opacity: 1;
+    transform: translateX(-50%) translateY(100%);
+  }
+  90%{
+    opacity: 1;
+    transform: translateX(-50%) translateY(100%);
+  }
+  100%{
+    opacity: 0;
+    transform: translateX(-50%) translateY(300%);
+  }
+}
+
+.pop-down{
+  animation: popdown 5s;
+  position: fixed;
+  top: 0;
+  left:50%;
+  transform: translateX(-50%) translateY(300%);
+  opacity: 0;
+  pointer-events: none;
+  padding: 7px 15px;
+  border-radius: 5px;
+  z-index: 999999;
+}
+.pop-down p{
+  font-weight: 500;
+}

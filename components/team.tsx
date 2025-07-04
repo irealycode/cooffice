@@ -18,7 +18,12 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Plus, Edit, Trash2, Mail, Phone, Search } from "lucide-react"
+import { Plus, Edit, Trash2, Mail, Phone, Search, UserMinus, UserPlus } from "lucide-react"
+import axios from "axios"
+import { ip, port } from "@/hooks/hosts"
+import { MessagePop } from "./message-pop"
+import { useEffect } from "react"
+import { format } from "date-fns"
 
 // Sample users data
 // const initialUsers = [
@@ -68,88 +73,200 @@ import { Plus, Edit, Trash2, Mail, Phone, Search } from "lucide-react"
 //   },
 // ]
 
-const roles = ["Manager", "Staff", "Member"]
+const roles = ["Staff"]
 const companies = ["TechCorp", "DesignStudio", "StartupInc", "FreelanceWork", "Other"]
 
 interface userType{
-    id: number;
-    name: string;
-    email: string;
-    phone: string;
-    role: string;
-    company: string;
-    status: string;
-    avatar: string;
-    joinDate: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  email: string;
+  phone: string;
+  role: string;
+  status: string;
+  avatar: string;
+  createdAt: string;
 }
 
-export default function UsersPage({initialUsers}:{initialUsers:userType[]}) {
-  const [users, setUsers] = useState(initialUsers)
+export default function UsersPage({token}:{token:string}) {
+  const [users, setUsers] = useState<userType[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
-  const [editingUser, setEditingUser] = useState<any>(null)
+  const [editingUser, setEditingUser] = useState<userType | null>(null)
+  const [message,setMessage] = useState<null|{type:"good" | "error" | "warning",message:string}>(null)
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
-    role: "",
-    company: "",
+    role: "staff",
     status: "Active",
   })
 
+  useEffect(()=>{
+    getUserInfo()
+  },[])
+
+
+  const getUserInfo = () =>{
+    axios.get(`http://${ip}:${port}/api/v1/staff`,{
+        headers: {
+            Authorization: `Bearer ${token}`
+          }
+    }).then((res)=>{
+        console.log(res.data)
+        setUsers(res.data.content)
+        // setUsersTotal(res.data.totalElements)
+    }).catch((res)=>{
+        console.log(res)
+        // localStorage.removeItem('token')
+        // window.location.assign('/login')
+    })
+  }
+
   const filteredUsers = users.filter(
     (user) =>
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.company.toLowerCase().includes(searchTerm.toLowerCase()),
+      `${user.firstName.toLowerCase()} ${user.lastName.toLowerCase()}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   const handleAddUser = () => {
-    const newUser = {
-      id: users.length + 1,
-      ...formData,
-      avatar: "/placeholder.svg?height=40&width=40",
-      joinDate: new Date().toISOString().split("T")[0],
+    const data = {
+      firstName:formData.firstName,
+      lastName:formData.lastName,
+      email:formData.email,
+      password:'staff_pass'
     }
-    setUsers([...users, newUser])
+    axios.post(`http://${ip}:${port}/api/v1/auth/staff/register`,data,{
+      headers: {
+          Authorization: `Bearer ${token}`
+        }
+    }).then((res)=>{
+      console.log(res.data)
+      getUserInfo()
+
+      setMessage({type:"good",message:"Added User Successfully !"})
+      setTimeout(()=>{
+        setMessage(null)
+      },5000)
+      // setMessage(null)
+      // localStorage.setItem('staff_token',res.data.token)
+      // localStorage.setItem('token',res.data.token)
+      // window.location.assign('/')
+    }).catch((res)=>{
+      setMessage({type:"error",message:res.response.data.message??"Adding User Failed !"})
+      setTimeout(()=>{
+        setMessage(null)
+      },5000)
+      console.log(res)
+    })
+    // setUsers([...users, newUser])
     setIsAddDialogOpen(false)
     resetForm()
   }
 
   const handleEditUser = (user: any) => {
     setEditingUser(user)
-    setFormData({
-      name: user.name,
+    setFormData(prev =>({...prev,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       phone: user.phone,
       role: user.role,
-      company: user.company,
-      status: user.status,
-    })
+    }))
     setIsEditDialogOpen(true)
   }
 
   const handleUpdateUser = () => {
-    const updatedUsers = users.map((user) => (user.id === editingUser.id ? { ...user, ...formData } : user))
-    setUsers(updatedUsers)
+    if(!editingUser) return
+    const data = {
+      firstName:formData.firstName,
+      lastName:formData.lastName,
+      email:formData.email,
+      // password:'staff_pass'
+    }
+    axios.put(`http://${ip}:${port}/api/v1/staff/${editingUser.id}`,data,{
+      headers: {
+          Authorization: `Bearer ${token}`
+        }
+    }).then((res)=>{
+      console.log(res.data)
+      getUserInfo()
+
+      setMessage({type:"good",message:"Updated User Successfully !"})
+      setTimeout(()=>{
+        setMessage(null)
+      },5000)
+      // setMessage(null)
+      // localStorage.setItem('staff_token',res.data.token)
+      // localStorage.setItem('token',res.data.token)
+      // window.location.assign('/')
+    }).catch((res)=>{
+      setMessage({type:"error",message:res.response.data.message??"Adding User Failed !"})
+      setTimeout(()=>{
+        setMessage(null)
+      },5000)
+      console.log(res)
+    })
+
     setIsEditDialogOpen(false)
     setEditingUser(null)
     resetForm()
   }
 
-  const handleDeleteUser = (id: number) => {
+  const handleDeleteUser = (id: string) => {
     setUsers(users.filter((user) => user.id !== id))
   }
 
   const resetForm = () => {
     setFormData({
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
       phone: "",
       role: "",
-      company: "",
       status: "Active",
+    })
+  }
+
+  const suspendUser = (id:string) =>{
+    axios.post(`http://${ip}:${port}/api/v1/staff/suspend/${id}`,{},{
+      headers: {
+          Authorization: `Bearer ${token}`
+        }
+    }).then((res)=>{
+      console.log(res.data)
+      getUserInfo()
+    }).catch((res)=>{
+      console.log(res)
+    })
+  }
+
+  const activateUser = (id:string) =>{
+    axios.post(`http://${ip}:${port}/api/v1/staff/activate/${id}`,{},{
+      headers: {
+          Authorization: `Bearer ${token}`
+        }
+    }).then((res)=>{
+      console.log(res.data)
+      getUserInfo()
+    }).catch((res)=>{
+      console.log(res)
+    })
+  }
+
+  const deleteUser = (id:string) =>{
+    axios.delete(`http://${ip}:${port}/api/v1/staff/${id}`,{
+      headers: {
+          Authorization: `Bearer ${token}`
+        }
+    }).then((res)=>{
+      console.log(res.data)
+      getUserInfo()
+    }).catch((res)=>{
+      console.log(res)
     })
   }
 
@@ -168,10 +285,10 @@ export default function UsersPage({initialUsers}:{initialUsers:userType[]}) {
 
   return (
     <div className="space-y-6 p-6">
-      {/* Header */}
+        {message && <MessagePop type={message.type} message={message.message} />}      
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Users Management</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Staff Management</h1>
           <p className="text-gray-600">Manage company users and their roles</p>
         </div>
         {/* Add User Dialog */}
@@ -179,23 +296,34 @@ export default function UsersPage({initialUsers}:{initialUsers:userType[]}) {
           <DialogTrigger asChild>
             <Button className="bg-blue-600 hover:bg-blue-500">
               <Plus className="w-4 h-4 mr-2" />
-              Add User
+              Add Staff
             </Button>
           </DialogTrigger>
           <DialogContent className="max-w-lg">
             <DialogHeader>
-              <DialogTitle>Add New User</DialogTitle>
-              <DialogDescription>Create a new company user</DialogDescription>
+              <DialogTitle>Add New Staff</DialogTitle>
+              <DialogDescription>Create a new company staff</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="name" className="text-right">
-                  Name
+                  First Name
                 </Label>
                 <Input
                   id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="phone" className="text-right">
+                  Last Name
+                </Label>
+                <Input
+                  id="phone"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
                   className="col-span-3"
                 />
               </div>
@@ -211,24 +339,14 @@ export default function UsersPage({initialUsers}:{initialUsers:userType[]}) {
                   className="col-span-3"
                 />
               </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="phone" className="text-right">
-                  Phone
-                </Label>
-                <Input
-                  id="phone"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="col-span-3"
-                />
-              </div>
+              
               <div className="grid grid-cols-4 items-center gap-4">
                 <Label htmlFor="role" className="text-right">
                   Role
                 </Label>
                 <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })}>
                   <SelectTrigger className="col-span-3">
-                    <SelectValue placeholder="Select role" />
+                    <SelectValue placeholder="Staff" />
                   </SelectTrigger>
                   <SelectContent>
                     {roles.map((role) => (
@@ -262,18 +380,12 @@ export default function UsersPage({initialUsers}:{initialUsers:userType[]}) {
             <div className="text-2xl font-bold">{users.filter((u) => u.status === "Active").length}</div>
           </CardHeader>
         </Card>
-        <Card>
-          <CardHeader className="pb-6">
-            <CardTitle className="text-sm font-medium">Admins</CardTitle>
-            <div className="text-2xl font-bold">{users.filter((u) => u.role === "Admin").length}</div>
-          </CardHeader>
-        </Card>
       </div>
 
       {/* Search */}
       <Card>
         <CardHeader>
-          <CardTitle>All Users</CardTitle>
+          <CardTitle>All Staff</CardTitle>
           <CardDescription>Manage all company users and their permissions</CardDescription>
           <div className="relative">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -305,14 +417,11 @@ export default function UsersPage({initialUsers}:{initialUsers:userType[]}) {
                       <Avatar>
                         <AvatarImage src={user.avatar || "/placeholder.svg"} />
                         <AvatarFallback>
-                          {user.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
+                          {user.firstName[0].toUpperCase()} {user.lastName[0].toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <div className="font-medium">{user.name}</div>
+                        <div className="font-medium">{user?.firstName[0].toUpperCase()}{user?.firstName.slice(1)} {user?.lastName[0].toUpperCase()}{user?.lastName.slice(1)}</div>
                       </div>
                     </div>
                   </TableCell>
@@ -322,10 +431,6 @@ export default function UsersPage({initialUsers}:{initialUsers:userType[]}) {
                         <Mail className="w-3 h-3 mr-1" />
                         {user.email}
                       </div>
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Phone className="w-3 h-3 mr-1" />
-                        {user.phone}
-                      </div>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -334,13 +439,16 @@ export default function UsersPage({initialUsers}:{initialUsers:userType[]}) {
                   <TableCell>
                     <Badge variant={user.status === "Active" ? "default" : "secondary"}>{user.status}</Badge>
                   </TableCell>
-                  <TableCell>{user.joinDate}</TableCell>
+                  <TableCell>{format(new Date(user.createdAt),"dd MMM yyyy")}</TableCell>
                   <TableCell>
                     <div className="flex space-x-2">
                       <Button variant="outline" size="sm" onClick={() => handleEditUser(user)}>
                         <Edit className="w-4 h-4" />
                       </Button>
-                      <Button variant="destructive" size="sm" onClick={() => handleDeleteUser(user.id)}>
+                      <Button className={user.status === "ACTIVE"?"bg-orange-500":"bg-green-500 text-black"} size="sm" onClick={() =>{if(user.status === "ACTIVE"){suspendUser(user.id)}else{activateUser(user.id)}}}>
+                        {user.status === "ACTIVE"?<UserMinus className="w-4 h-4" />:<UserPlus className="w-4 h-4" />}
+                      </Button>
+                      <Button variant="destructive" size="sm" onClick={() => deleteUser(user.id)}>
                         <Trash2 className="w-4 h-4" />
                       </Button>
                     </div>
@@ -360,17 +468,28 @@ export default function UsersPage({initialUsers}:{initialUsers:userType[]}) {
             <DialogDescription>Update user information and permissions</DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="edit-name" className="text-right">
-                Name
-              </Label>
-              <Input
-                id="edit-name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="col-span-3"
-              />
-            </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  First Name
+                </Label>
+                <Input
+                  id="name"
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  className="col-span-3"
+                />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="phone" className="text-right">
+                  Last Name
+                </Label>
+                <Input
+                  id="phone"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  className="col-span-3"
+                />
+              </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="edit-email" className="text-right">
                 Email
@@ -383,50 +502,8 @@ export default function UsersPage({initialUsers}:{initialUsers:userType[]}) {
                 className="col-span-3"
               />
             </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="edit-phone" className="text-right">
-                Phone
-              </Label>
-              <Input
-                id="edit-phone"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="edit-role" className="text-right">
-                Role
-              </Label>
-              <Select value={formData.role} onValueChange={(value) => setFormData({ ...formData, role: value })}>
-                <SelectTrigger className="col-span-3">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {roles.map((role) => (
-                    <SelectItem key={role} value={role}>
-                      {role}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
             
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="edit-status" className="text-right">
-                Status
-              </Label>
-              <Select value={formData.status} onValueChange={(value) => setFormData({ ...formData, status: value })}>
-                <SelectTrigger className="col-span-3">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Active">Active</SelectItem>
-                  <SelectItem value="Inactive">Inactive</SelectItem>
-                  <SelectItem value="Suspended">Suspended</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            
           </div>
           <DialogFooter>
             <Button onClick={handleUpdateUser}>Update User</Button>

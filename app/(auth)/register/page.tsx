@@ -14,6 +14,14 @@ import Logo from "@/components/logo"
 
 import axios from "axios"
 import { ip, port } from "@/hooks/hosts"
+import { AlertCircleIcon, CheckCircle2Icon, PopcornIcon } from "lucide-react"
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
+import { removeWhitespaces } from "@/hooks/imports"
+import { MessagePop } from "@/components/message-pop"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -25,14 +33,45 @@ export default function RegisterPage() {
     confirmPassword: "",
     agreeToTerms: false,
   })
+  const [message,setMessage] = useState<null|{type:"good" | "error" | "warning",message:string}>(null)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    axios.post(`http://${ip}:${port}/register`,formData).then((res)=>{
+
+    if (formData.password.length < 8) {
+      setMessage({type:"warning",message:"Password must be 8 characters or longer !"})
+      setTimeout(()=>{
+        setMessage(null)
+      },5000)
+      return
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setMessage({type:"warning",message:"Passwords must match !"})
+      setTimeout(()=>{
+        setMessage(null)
+      },5000)
+      return
+    }
+    const data = {
+      firstName: removeWhitespaces(formData.firstName) ,
+      lastName: removeWhitespaces(formData.lastName) ,
+      email: removeWhitespaces(formData.email) ,
+      phoneNumber: removeWhitespaces(formData.phoneNumber) ,
+      password: removeWhitespaces(formData.password) ,
+    }
+    axios.post(`http://${ip}:${port}/api/v1/auth/users/register`,data).then((res)=>{
       console.log(res.data)
+      setMessage({type:"good",message:"Please check your email for confirmation"})
+      setTimeout(()=>{
+        setMessage(null)
+      },5000)
     }).catch((res)=>{
       console.log(res.status)
-      console.log(res.data)
+      console.log("body:",res.response.data)
+      setMessage({type:"error",message:res.response.data.message??"Unable to register !"})
+      setTimeout(()=>{
+        setMessage(null)
+      },5000)
     })
   }
 
@@ -42,6 +81,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
+      {message && <MessagePop type={message.type} message={message.message} />}
       <div className="absolute top-2 md:top-8 md:left-8" >
         <Link href="/">
           <Logo font="3xl" width="9" />
@@ -166,6 +206,8 @@ export default function RegisterPage() {
         </form>
 
       {/* </div> */}
+      
+      
     </div>
   )
 }
